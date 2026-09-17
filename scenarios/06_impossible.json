@@ -1,0 +1,13 @@
+{
+  "name": "Desafio sem rota",
+  "message": "Quando um foco for identificado, isole a área e remova os recipientes que acumulam água.",
+  "grid": [
+    "########",
+    "#S.....#",
+    "#.####.#",
+    "#.#F##.#",
+    "#.####.#",
+    "#......#",
+    "########"
+  ]
+}

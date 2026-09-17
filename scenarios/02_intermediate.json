@@ -1,0 +1,16 @@
+{
+  "name": "Quintal intermediário",
+  "message": "Vasos e pratos de plantas devem ser limpos semanalmente para não acumular água.",
+  "grid": [
+    "##########",
+    "#S...#...#",
+    "#.##.#.G.#",
+    "#..#...#.#",
+    "##.###.#.#",
+    "#..G...#.#",
+    "#.####.#.#",
+    "#....D...#",
+    "#.######F#",
+    "##########"
+  ]
+}

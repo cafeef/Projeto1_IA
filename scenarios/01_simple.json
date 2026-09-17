@@ -1,0 +1,14 @@
+{
+  "name": "Quintal simples",
+  "message": "Elimine recipientes que acumulam água no quintal e mantenha-os cobertos.",
+  "grid": [
+    "########",
+    "#S..G..#",
+    "#.##.#.#",
+    "#..D...#",
+    "###.##.#",
+    "#...G#F#",
+    "#.##...#",
+    "########"
+  ]
+}
