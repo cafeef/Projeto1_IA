@@ -1,1 +1,7 @@
 /personal
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+results/*
+!results/.gitkeep
