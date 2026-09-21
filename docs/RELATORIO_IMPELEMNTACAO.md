@@ -177,3 +177,143 @@ significa que, para este problema, A\* não precisa reabrir nós já
 fechados. Na implementação, o mecanismo de descarte de nós obsoletos
 (via `best_g`) foi mantido por robustez, mas na prática raramente é
 acionado.
+
+# Insumo para a Seção 8 (Análise dos Resultados) — da Pessoa 2
+
+Este arquivo é rascunho baseado nas execuções reais dos quatro algoritmos
+nos cenários do repositório. Uso livre pela Pessoa 4 para consolidar a
+Seção 8 do relatório. Números concretos abaixo — se algum cenário for
+regenerado ou substituído, refazer a coleta com `python scripts/run_scenarios.py`.
+
+## Dados observados (execução em 21/09/2026)
+
+Considerando os três cenários oficiais (01_simple, 02_intermediate,
+05_cost_tradeoff):
+
+| Cenário | Método | Passos | Custo | Expandidos | Gerados | Fronteira máx | Tempo (ms) |
+|---|---|---|---|---|---|---|---|
+| 01_simple | BFS | 9 | 10 | 20 | 23 | 3 | 0.57 |
+| 01_simple | DFS | 11 | 15 | 15 | 17 | 4 | 0.22 |
+| 01_simple | Gulosa | 9 | 10 | 10 | 13 | 4 | 0.17 |
+| 01_simple | A\* | 9 | 10 | 16 | 17 | 3 | 0.29 |
+| 02_intermediate | BFS | 14 | 14 | 39 | 41 | 5 | 0.76 |
+| 02_intermediate | DFS | 16 | 19 | 18 | 22 | 5 | 0.25 |
+| 02_intermediate | Gulosa | 14 | 14 | 15 | 20 | 6 | 0.23 |
+| 02_intermediate | A\* | 14 | 14 | 20 | 26 | 7 | 0.33 |
+| 05_cost_tradeoff | BFS | 17 | 65 | 77 | 84 | 7 | 1.21 |
+| 05_cost_tradeoff | DFS | 41 | 41 | 122 | 128 | 8 | 3.03 |
+| 05_cost_tradeoff | Gulosa | 17 | 65 | 18 | 19 | 2 | 0.49 |
+| 05_cost_tradeoff | A\* | 21 | 21 | 23 | 26 | 4 | 0.88 |
+
+## Respostas às 15 perguntas obrigatórias
+
+**1. Todos os algoritmos encontraram solução em todos os cenários?**
+Sim, nos três cenários oficiais. Testes adicionais no cenário
+06_impossible confirmam que os quatro algoritmos também terminam
+corretamente reportando falha quando o objetivo é inalcançável.
+
+**2. Qual algoritmo expandiu mais estados?**
+Depende do cenário. Em 01_simple e 02_intermediate, BFS expandiu mais.
+Em 05_cost_tradeoff, DFS expandiu mais (122 estados), refletindo sua
+tendência de percorrer caminhos longos antes de retroceder.
+
+**3. Qual algoritmo apresentou maior tamanho de fronteira?**
+Em 01_simple, DFS e Gulosa empataram com 4. Em 02_intermediate, A\*
+teve 7. Em 05_cost_tradeoff, DFS teve 8. Não há um "vencedor" único —
+o tamanho da fronteira depende da topologia do cenário e da estratégia
+do algoritmo. Vale notar que a fronteira máxima permaneceu pequena em
+todos os casos (≤ 8), o que é esperado numa grade sem grande fator de
+ramificação (no máximo 4 vizinhos).
+
+**4. A DFS apresentou algum comportamento desfavorável?**
+Sim, e de forma acentuada. Em 01_simple, DFS achou caminho de 11 passos
+(custo 15) enquanto o ótimo é 9 passos (custo 10). Em 05_cost_tradeoff,
+DFS achou caminho de 41 passos (custo 41) — quase o dobro do que A\*
+achou (21 passos, custo 21). Também foi o algoritmo mais lento nesse
+cenário (3.03 ms). O comportamento é esperado: DFS aprofunda antes de
+avaliar alternativas, e em grids grandes isso a leva a caminhos longos
+antes de encontrar o objetivo.
+
+**5. BFS encontrou o caminho com menor quantidade de passos?**
+Sim, em todos os cenários. Em 01_simple e 02_intermediate empatou com
+Gulosa e A\* (todos com 9 e 14 passos respectivamente). Em
+05_cost_tradeoff, BFS achou 17 passos — o mínimo em número de passos.
+
+**6. O caminho com menos passos foi sempre o caminho de menor custo?**
+Não. Este é o achado mais importante da análise. Em 05_cost_tradeoff,
+BFS achou o caminho de 17 passos, mas com custo 65 — atravessando
+terreno de custo elevado. A\* achou um caminho de 21 passos (mais
+longo), mas com custo 21 — desviando do terreno caro. A diferença de
+custo é de mais de 3× a favor do caminho mais longo. Esse cenário
+demonstra concretamente por que algoritmos sensíveis a custo (como A\*)
+são necessários em problemas com terrenos heterogêneos.
+
+**7. A Busca Gulosa encontrou a solução de menor custo?**
+Não em 05_cost_tradeoff (custo 65 vs 21 do A\*). Empatou com A\* em
+01_simple e 02_intermediate porque nesses cenários o caminho ótimo em
+passos coincide com o ótimo em custo. A Gulosa ignora `g(n)` e decide
+apenas pela heurística — quando a heurística "aponta" para uma
+direção que depois se revela cara, ela não corrige o rumo.
+
+**8. A\* encontrou a solução de menor custo?**
+Sim, em todos os cenários. É o único algoritmo com essa garantia entre
+os quatro implementados, sob heurística admissível (comprovada na
+Seção 5 do relatório).
+
+**9. A heurística influenciou o desempenho?**
+Sim, mas de forma variável conforme o cenário:
+- Em 01_simple, Gulosa expandiu apenas 10 estados (metade do BFS).
+- Em 02_intermediate, Gulosa expandiu 15 estados (BFS expandiu 39).
+- Em 05_cost_tradeoff, o contraste é máximo: Gulosa expandiu apenas 18
+  estados, enquanto BFS expandiu 77 — redução de mais de 4×.
+A heurística reduz sistematicamente a exploração quando aponta na
+direção correta. O custo dessa redução é aparente na Gulosa (que troca
+qualidade por velocidade); no A\*, a heurística acelera sem sacrificar
+otimalidade.
+
+**10. Qual algoritmo apresentou melhor desempenho nos cenários mais complexos?**
+Depende do critério:
+- Menor custo → A\*
+- Menor tempo → Gulosa
+- Menor estados expandidos → Gulosa
+- Menor memória (fronteira) → Gulosa
+A\* é o melhor equilibrado: paga um pouco mais em tempo e memória para
+garantir custo ótimo. Em 05_cost_tradeoff, A\* expandiu 23 estados vs
+77 do BFS, mostrando que a heurística vale a pena mesmo quando exige
+computação adicional.
+
+**11. O usuário conseguiu obter menor custo que algum dos algoritmos?**
+[A responder após execuções humanas — Pessoa 4]
+
+**12. Usuário e agente escolheram caminhos diferentes?**
+[A responder após execuções humanas]
+
+**13. Em quais situações o agente superou claramente o usuário?**
+[A responder após execuções humanas. Expectativa: em cenários com
+trade-off passos vs custo (como 05_cost_tradeoff), o usuário provavelmente
+tenderá ao caminho visualmente "mais curto" e não perceberá o trade-off
+de custo, enquanto o A\* sempre escolherá o ótimo.]
+
+**14. Em quais situações o usuário apresentou desempenho semelhante ou superior?**
+[A responder após execuções humanas. Expectativa: em 01_simple, com
+poucos obstáculos e custos uniformes, o usuário pode empatar com BFS
+em passos e custo.]
+
+**15. Qual algoritmo seria mais adequado para esse problema?**
+A\*. É o único que combina completude, otimalidade em custo e uso da
+heurística para reduzir a exploração. A Gulosa é mais rápida mas não
+garante qualidade da solução. BFS garante menor número de passos mas
+ignora custos — o que é problemático no domínio da dengue, onde
+terrenos diferentes representam obstáculos parciais reais (grama alta,
+terreno de difícil acesso). DFS não tem garantia útil neste domínio.
+
+## Observações adicionais para o relatório
+
+- O cenário 05 é o mais informativo: é o único que separa claramente
+  BFS de A\* em custo. Recomendo destacá-lo na análise.
+- Nos cenários 01 e 02, os quatro algoritmos são difíceis de
+  diferenciar em passos e custo. Diferenciam-se principalmente em
+  estados expandidos e tempo.
+- Os cenários 03, 04, 06 existem no repositório mas não fazem parte
+  dos experimentos oficiais. Podem virar apêndice ou análise adicional
+  se houver espaço.
