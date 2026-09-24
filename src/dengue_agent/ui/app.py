@@ -47,6 +47,10 @@ KEY_MOVES = {
     arcade.key.LEFT: (0, -1), arcade.key.A: (0, -1),
 }
 
+# Segurar uma seta: 1 passo imediato, espera REPEAT_DELAY_S e repete a cada REPEAT_S.
+REPEAT_DELAY_S = 0.25
+REPEAT_S = 0.09
+
 ALGORITHMS = [
     ("BFS", breadth_first_search),
     ("DFS", depth_first_search),
@@ -64,6 +68,8 @@ class GameWindow(arcade.Window):
         self.background_color = (25, 25, 30)
         self.scenarios = load_scenarios(SCENARIOS_DIR)
         self.algorithm_index = len(ALGORITHMS) - 1  # começa no A*
+        self.held_key: int | None = None
+        self.hold_timer = 0.0
         self.title = arcade.Text("", 16, HEIGHT - 28, arcade.color.WHITE, 16)
         self.status = arcade.Text("", 16, HEIGHT - 52, arcade.color.LIGHT_GRAY, 13)
         self.agent_status = arcade.Text("", 16, HEIGHT - 74, arcade.color.LIGHT_GRAY, 13)
@@ -117,6 +123,11 @@ class GameWindow(arcade.Window):
     def on_update(self, delta_time: float) -> None:
         if self.agent:
             self.agent.update(delta_time)
+        if self.held_key is not None:
+            self.hold_timer -= delta_time
+            while self.hold_timer <= 0:
+                self.player.move(*KEY_MOVES[self.held_key])
+                self.hold_timer += REPEAT_S
 
     def on_draw(self) -> None:
         self.clear()
@@ -218,6 +229,8 @@ class GameWindow(arcade.Window):
     def on_key_press(self, key: int, modifiers: int) -> None:
         if key in KEY_MOVES:
             self.player.move(*KEY_MOVES[key])
+            self.held_key = key  # a última tecla apertada manda
+            self.hold_timer = REPEAT_DELAY_S
         elif key == arcade.key.X:
             self.player.give_up()
         elif key == arcade.key.SPACE:
@@ -232,3 +245,7 @@ class GameWindow(arcade.Window):
             index = SCENARIO_KEYS.index(key)
             if index < len(self.scenarios):
                 self.select_scenario(index)
+
+    def on_key_release(self, key: int, modifiers: int) -> None:
+        if key == self.held_key:
+            self.held_key = None
