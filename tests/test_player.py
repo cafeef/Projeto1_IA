@@ -49,3 +49,16 @@ def test_chega_ao_foco_e_trava() -> None:
     assert not player.move(*UP)  # missão encerrada
     assert player.steps == 9
     assert player.elapsed_s == tempo
+
+
+def test_desistir_encerra_sem_chegar() -> None:
+    player = novo_jogador()
+    player.move(*RIGHT)
+    player.give_up()
+    assert player.done and player.gave_up
+    assert not player.finished
+
+    tempo = player.elapsed_s
+    assert not player.move(*RIGHT)
+    assert player.steps == 1
+    assert player.elapsed_s == tempo

@@ -18,6 +18,7 @@ class Player:
         self.cost = 0
         self._start: float | None = None
         self._end: float | None = None
+        self.gave_up = False
 
     @property
     def steps(self) -> int:
@@ -25,11 +26,17 @@ class Player:
 
     @property
     def finished(self) -> bool:
-        return self._end is not None
+        """Chegou ao foco."""
+        return self.problem.is_goal(self.position)
+
+    @property
+    def done(self) -> bool:
+        """Missão do usuário encerrada: chegou ou desistiu."""
+        return self.finished or self.gave_up
 
     @property
     def elapsed_s(self) -> float:
-        """Tempo desde o primeiro movimento; congela ao chegar no foco."""
+        """Tempo desde o primeiro movimento; congela ao chegar ou desistir."""
         if self._start is None:
             return 0.0
         end = self._end if self._end is not None else perf_counter()
@@ -37,7 +44,7 @@ class Player:
 
     def move(self, d_row: int, d_col: int) -> bool:
         """Tenta andar uma célula. Retorna False se o movimento for inválido."""
-        if self.finished:
+        if self.done:
             return False
         target = Position(self.position.row + d_row, self.position.col + d_col)
         if not self.problem.is_valid(target):
@@ -51,3 +58,11 @@ class Player:
         if self.problem.is_goal(target):
             self._end = perf_counter()
         return True
+
+    def give_up(self) -> None:
+        """Encerra sem chegar (ex.: cenário sem rota). O tempo congela aqui."""
+        if self.done:
+            return
+        self.gave_up = True
+        if self._start is not None:
+            self._end = perf_counter()

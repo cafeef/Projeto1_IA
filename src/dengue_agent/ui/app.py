@@ -37,6 +37,8 @@ AGENT_COLOR = (140, 60, 200)
 TRAIL_COLOR = (245, 200, 60, 110)
 EXPLORED_COLOR = (80, 160, 255, 90)
 AGENT_PATH_COLOR = (140, 60, 200, 120)
+PANEL_COLOR = (20, 20, 28)
+PANEL_W, PANEL_H = 820, 330
 
 KEY_MOVES = {
     arcade.key.UP: (-1, 0), arcade.key.W: (-1, 0),
@@ -84,8 +86,14 @@ class GameWindow(arcade.Window):
     def reset(self) -> None:
         self.player = Player(self.problem)
         self.agent: AgentRun | None = None
+        self.summary: list[arcade.Text] | None = None
+
+    @property
+    def mission_over(self) -> bool:
+        return self.player.done and self.agent is not None and self.agent.finished
 
     def start_agent(self) -> None:
+        self.summary = None
         _, search = ALGORITHMS[self.algorithm_index]
         # A busca roda inteira aqui e mede o próprio tempo; a animação vem depois.
         self.agent = AgentRun(search(self.problem), self.problem.initial_state)
@@ -135,13 +143,63 @@ class GameWindow(arcade.Window):
         p = self.player
         self.status.text = (
             f"Usuário: passos={p.steps}  custo={p.cost}  tempo={p.elapsed_s:.1f}s"
-            + ("   CHEGOU!" if p.finished else "")
-            + "      setas/WASD movem · R reinicia"
+            + ("   CHEGOU!" if p.finished else "   DESISTIU" if p.gave_up else "")
+            + "      setas/WASD movem · X desiste · R reinicia"
         )
         self.agent_status.text = self.agent_text()
         self.title.draw()
         self.status.draw()
         self.agent_status.draw()
+
+        if self.mission_over:
+            if self.summary is None:
+                self.summary = self.build_summary()
+            left, bottom = (WIDTH - PANEL_W) / 2, (HEIGHT - HEADER - PANEL_H) / 2
+            arcade.draw_lbwh_rectangle_filled(left, bottom, PANEL_W, PANEL_H, PANEL_COLOR)
+            arcade.draw_lbwh_rectangle_outline(left, bottom, PANEL_W, PANEL_H, arcade.color.WHITE, 2)
+            for text in self.summary:
+                text.draw()
+
+    def build_summary(self) -> list[arcade.Text]:
+        """Painel final: mensagem educativa e comparação usuário x agente."""
+        p, r = self.player, self.agent.result
+        name, _ = ALGORITHMS[self.algorithm_index]
+        left = (WIDTH - PANEL_W) / 2
+        top = (HEIGHT - HEADER + PANEL_H) / 2
+        center = WIDTH / 2
+        white, gray = arcade.color.WHITE, arcade.color.LIGHT_GRAY
+
+        title = "Missão concluída!" if p.finished or r.found else "Missão encerrada"
+        texts = [
+            arcade.Text(title, center, top - 40, white, 22, anchor_x="center", bold=True),
+            # ponytail: uma linha só (as mensagens atuais têm < 100 caracteres);
+            # usar multiline se aparecer mensagem maior que o painel.
+            arcade.Text(self.scenario.message, center, top - 80, (255, 230, 150), 14, anchor_x="center"),
+        ]
+
+        user_label = "Usuário" + (" (desistiu)" if p.gave_up else "")
+        agent_label = f"Agente {name}" + ("" if r.found else " (sem rota)")
+        rows = [
+            ("", "Passos", "Custo", "Tempo", "Expandidos", "Gerados", "Fronteira"),
+            (user_label, p.steps, p.cost, f"{p.elapsed_s:.1f} s", "—", "—", "—"),
+            (
+                agent_label,
+                r.steps if r.found else "—",
+                r.cost if r.found else "—",
+                f"{r.execution_time_ms:.3f} ms",
+                r.expanded_states, r.generated_states, r.max_frontier_size,
+            ),
+        ]
+        columns = [left + 30] + [left + 230 + i * 95 for i in range(6)]
+        for i, row in enumerate(rows):
+            y = top - 175 - i * 34
+            color = gray if i == 0 else white
+            for x, value in zip(columns, row):
+                texts.append(arcade.Text(str(value), x, y, color, 14))
+
+        footer = "R joga de novo · TAB/ESPAÇO testa outro algoritmo · 1-6 troca o cenário"
+        texts.append(arcade.Text(footer, center, top - PANEL_H + 24, gray, 12, anchor_x="center"))
+        return texts
 
     def agent_text(self) -> str:
         name, _ = ALGORITHMS[self.algorithm_index]
@@ -160,11 +218,14 @@ class GameWindow(arcade.Window):
     def on_key_press(self, key: int, modifiers: int) -> None:
         if key in KEY_MOVES:
             self.player.move(*KEY_MOVES[key])
+        elif key == arcade.key.X:
+            self.player.give_up()
         elif key == arcade.key.SPACE:
             self.start_agent()
         elif key == arcade.key.TAB:
             self.algorithm_index = (self.algorithm_index + 1) % len(ALGORITHMS)
             self.agent = None
+            self.summary = None
         elif key == arcade.key.R:
             self.reset()
         elif key in SCENARIO_KEYS:
