@@ -7,7 +7,7 @@ nunca decide nada sozinha.
 import arcade
 
 from ..agent import AgentRun
-from ..config import SCENARIOS_DIR
+from ..config import HUMAN_RUNS_FILE, SCENARIOS_DIR
 from ..grid import GridProblem
 from ..models import CellType, Position
 from ..player import Player
@@ -91,6 +91,7 @@ class GameWindow(arcade.Window):
 
     def reset(self) -> None:
         self.player = Player(self.problem)
+        self.player_saved = False
         self.agent: AgentRun | None = None
         self.summary: list[arcade.Text] | None = None
 
@@ -128,6 +129,10 @@ class GameWindow(arcade.Window):
             while self.hold_timer <= 0:
                 self.player.move(*KEY_MOVES[self.held_key])
                 self.hold_timer += REPEAT_S
+        # Um ponto só cobre toque, tecla segurada e desistência.
+        if self.player.done and not self.player_saved:
+            self.player.save(HUMAN_RUNS_FILE, self.scenario.name)
+            self.player_saved = True
 
     def on_draw(self) -> None:
         self.clear()
@@ -155,6 +160,7 @@ class GameWindow(arcade.Window):
         self.status.text = (
             f"Usuário: passos={p.steps}  custo={p.cost}  tempo={p.elapsed_s:.1f}s"
             + ("   CHEGOU!" if p.finished else "   DESISTIU" if p.gave_up else "")
+            + (" (salvo em results/)" if self.player_saved else "")
             + "      setas/WASD movem · X desiste · R reinicia"
         )
         self.agent_status.text = self.agent_text()

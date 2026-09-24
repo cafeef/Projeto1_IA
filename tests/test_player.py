@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from dengue_agent.grid import GridProblem
@@ -62,3 +63,25 @@ def test_desistir_encerra_sem_chegar() -> None:
     assert not player.move(*RIGHT)
     assert player.steps == 1
     assert player.elapsed_s == tempo
+
+
+def test_salva_partidas_em_json_lines(tmp_path: Path) -> None:
+    arquivo = tmp_path / "results" / "human_runs.jsonl"
+
+    player = novo_jogador()
+    for move in [RIGHT] * 5 + [DOWN] * 4:
+        player.move(*move)
+    player.save(arquivo, "Quintal simples")
+
+    desistente = novo_jogador()
+    desistente.give_up()
+    desistente.save(arquivo, "Quintal simples")
+
+    linhas = [json.loads(l) for l in arquivo.read_text(encoding="utf-8").splitlines()]
+    assert len(linhas) == 2
+    primeira = linhas[0]
+    assert primeira["method"] == "Usuário"
+    assert primeira["found"] and not primeira["gave_up"]
+    assert (primeira["steps"], primeira["cost"]) == (9, player.cost)
+    assert primeira["path"][0] == [1, 1] and primeira["path"][-1] == [5, 6]
+    assert linhas[1]["gave_up"] and not linhas[1]["found"]

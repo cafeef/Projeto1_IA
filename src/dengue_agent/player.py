@@ -4,6 +4,9 @@ Não depende do Arcade, então pode ser testado sem abrir janela. Todas as
 regras (limites, obstáculos, custo) vêm do GridProblem.
 """
 
+import json
+from datetime import datetime
+from pathlib import Path
 from time import perf_counter
 
 from .grid import GridProblem
@@ -66,3 +69,20 @@ class Player:
         self.gave_up = True
         if self._start is not None:
             self._end = perf_counter()
+
+    def save(self, path: Path, scenario_name: str) -> None:
+        """Acrescenta esta partida como uma linha JSON (formato JSON Lines)."""
+        record = {
+            "timestamp": datetime.now().isoformat(timespec="seconds"),
+            "scenario": scenario_name,
+            "method": "Usuário",
+            "found": self.finished,
+            "gave_up": self.gave_up,
+            "path": [[p.row, p.col] for p in self.path],
+            "steps": self.steps,
+            "cost": self.cost,
+            "time_s": round(self.elapsed_s, 3),
+        }
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as file:
+            file.write(json.dumps(record, ensure_ascii=False) + "\n")
