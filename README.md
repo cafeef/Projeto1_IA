@@ -17,6 +17,16 @@ uv sync
 uv run pytest
 ```
 
+### Sem uv (venv + pip)
+
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -e . matplotlib pytest
+```
+
+Depois disso, os comandos `uv run X` viram só `X`: `pytest`, `dengue` e `dengue-experimentos`. Também funcionam `python -m dengue_agent.main` e `python -m dengue_agent.experiments`.
+
 Os cenários ficam em `scenarios/`. O domínio em `src/dengue_agent/` não depende da interface gráfica: buscas e interface devem consumir `Scenario` e `GridProblem`.
 
 ## Jogo
