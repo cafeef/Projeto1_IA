@@ -22,7 +22,8 @@ def load_scenario(path: str | Path) -> Scenario:
         data = json.load(file)
 
     grid, start, goal = _read_grid(data["grid"])
-    return Scenario(data["name"], data["message"], grid, start, goal)
+    focus = data.get("focus", "Foco de dengue")
+    return Scenario(data["name"], data["message"], grid, start, goal, focus)
 
 
 def load_scenarios(folder: str | Path) -> list[Scenario]:

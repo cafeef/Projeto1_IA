@@ -8,9 +8,13 @@ dependencies = ["arcade>=3.0"]
 
 [project.scripts]
 dengue = "dengue_agent.main:main"
+dengue-experimentos = "dengue_agent.experiments:main"
 
 [dependency-groups]
-dev = ["pytest>=8.0"]
+dev = [
+    "matplotlib>=3.11.2",
+    "pytest>=8.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

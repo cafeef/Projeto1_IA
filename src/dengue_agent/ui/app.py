@@ -188,10 +188,14 @@ class GameWindow(arcade.Window):
 
         title = "Missão concluída!" if p.finished or r.found else "Missão encerrada"
         texts = [
-            arcade.Text(title, center, top - 40, white, 22, anchor_x="center", bold=True),
+            arcade.Text(title, center, top - 36, white, 22, anchor_x="center", bold=True),
+            arcade.Text(
+                f"Foco encontrado: {self.scenario.focus}",
+                center, top - 70, (255, 160, 120), 15, anchor_x="center", bold=True,
+            ),
             # ponytail: uma linha só (as mensagens atuais têm < 100 caracteres);
             # usar multiline se aparecer mensagem maior que o painel.
-            arcade.Text(self.scenario.message, center, top - 80, (255, 230, 150), 14, anchor_x="center"),
+            arcade.Text(self.scenario.message, center, top - 98, (255, 230, 150), 14, anchor_x="center"),
         ]
 
         user_label = "Usuário" + (" (desistiu)" if p.gave_up else "")
@@ -214,7 +218,10 @@ class GameWindow(arcade.Window):
             for x, value in zip(columns, row):
                 texts.append(arcade.Text(str(value), x, y, color, 14))
 
-        footer = "R joga de novo · TAB/ESPAÇO testa outro algoritmo · 1-6 troca o cenário"
+        footer = (
+            "R joga de novo · TAB/ESPAÇO testa outro algoritmo · "
+            f"1-{len(self.scenarios)} troca o cenário"
+        )
         texts.append(arcade.Text(footer, center, top - PANEL_H + 24, gray, 12, anchor_x="center"))
         return texts
 
