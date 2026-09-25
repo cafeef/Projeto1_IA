@@ -13,7 +13,9 @@ dengue-experimentos = "dengue_agent.experiments:main"
 [dependency-groups]
 dev = [
     "matplotlib>=3.11.2",
+    "pymupdf>=1.28.2",
     "pytest>=8.0",
+    "python-docx>=1.2.0",
 ]
 
 [tool.pytest.ini_options]

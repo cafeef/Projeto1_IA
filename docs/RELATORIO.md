@@ -1,8 +1,10 @@
 # Relatório Técnico — Agente de Combate à Dengue
 
-> Versão de trabalho em Markdown. A versão entregue no Moodle deve ser transposta para o
-> modelo de trabalhos acadêmicos da UTFPR (capa, folha de rosto, sumário, listas de
-> figuras e tabelas).
+> Texto-fonte do relatório. A versão no modelo de trabalhos acadêmicos da UTFPR
+> (`docs/RELATORIO.docx`) é gerada a partir deste arquivo com
+> `python scripts/gerar_relatorio_docx.py`. Linhas iniciadas por "Quadro N –", "Tabela N –",
+> "Gráfico N –" ou "Figura N –" viram legendas, e linhas "Fonte: ..." viram a fonte da
+> ilustração.
 
 ## 1. Introdução
 
@@ -37,7 +39,9 @@ busca são autorais: da biblioteca padrão foram usados apenas contêineres gen�
 ### 2.1 Matriz e tipos de célula
 
 O ambiente é uma matriz bidimensional lida de um arquivo JSON (`scenarios/*.json`). Cada
-caractere da grade vira uma célula:
+caractere da grade vira uma célula, conforme o Quadro 1.
+
+Quadro 1 – Tipos de célula e custos de deslocamento
 
 | Símbolo | Tipo (`CellType`) | Custo para entrar | Significado no cenário |
 |---|---|---:|---|
@@ -47,6 +51,8 @@ caractere da grade vira uma célula:
 | `#` | `OBSTACLE` | — | muro, móvel, parede: não pode ser atravessado |
 | `S` | `FREE` | 1 | posição inicial da missão |
 | `F` | `FREE` | 1 | foco de dengue (objetivo) |
+
+Fonte: Autoria própria (2026).
 
 Os custos seguem a sugestão do enunciado. São positivos e mantêm proporção com o esforço
 real: andar na grama custa o dobro da calçada, e atravessar terreno difícil custa o
@@ -83,6 +89,11 @@ então as regras de movimento existem em um único lugar.
 
 ### 3.1 Arquitetura
 
+A Figura 1 mostra como os módulos se relacionam. Os arquivos de cenário são lidos uma única
+vez, e o mesmo `GridProblem` alimenta as buscas, o usuário e a animação do agente.
+
+Figura 1 – Arquitetura do sistema
+
 ```text
 scenarios/*.json  →  scenarios.py (Scenario)  →  grid.py (GridProblem)
                                                      ├─ search/ (BFS, DFS, Gulosa, A*) → SearchResult
@@ -91,6 +102,8 @@ scenarios/*.json  →  scenarios.py (Scenario)  →  grid.py (GridProblem)
 ui/app.py (Arcade): desenha o estado e lê o teclado
 experiments.py: executa as 15 execuções e gera tabelas/gráficos
 ```
+
+Fonte: Autoria própria (2026).
 
 A interface não contém regras do problema. Ela apenas desenha o estado atual e repassa as
 teclas ao `Player` ou ao `AgentRun`. Por isso, `Player` e `AgentRun` são testados sem abrir
@@ -213,9 +226,9 @@ fila, pilha ou heap atingiu durante a execução.
 ## 5. Heurística Utilizada
 
 Para a Busca Gulosa e o A\* foi usada a **Distância Manhattan ponderada pelo menor custo
-de movimento** (`search/heuristics.py`):
+de movimento** (`search/heuristics.py`), definida na Equação 1:
 
-```text
+```formula
 h(n) = ( |linha(n) − linha(foco)| + |coluna(n) − coluna(foco)| ) × c_min
 ```
 
@@ -262,7 +275,9 @@ otimalidade. A análise completa está na Seção 8.
 
 Cada cenário representa um tipo de criadouro do *Aedes aegypti*. O tipo aparece no campo
 `focus` do JSON, e a orientação de prevenção, no campo `message`. Ao final da missão, o
-painel exibe "Foco encontrado: *tipo*" seguido da orientação:
+painel exibe "Foco encontrado: *tipo*" seguido da orientação, como mostra o Quadro 2.
+
+Quadro 2 – Focos de dengue e mensagens educativas por cenário
 
 | Cenário | Foco (criadouro) | Mensagem exibida |
 |---|---|---|
@@ -272,6 +287,8 @@ painel exibe "Foco encontrado: *tipo*" seguido da orientação:
 | Quintal especialista | Pneu com água acumulada | Pneus expostos acumulam água: mantenha-os cobertos ou dê a destinação adequada. |
 | Quintal complexo | Caixa-d'água mal tampada | Caixas de água devem permanecer bem tampadas para impedir a proliferação do mosquito. |
 | Desafio sem rota | Balde com água parada | Baldes sem uso devem ficar de boca para baixo, cobertos ou ser descartados corretamente. |
+
+Fonte: Autoria própria (2026), com base em Brasil (2024).
 
 As orientações seguem as recomendações do Ministério da Saúde para eliminar criadouros:
 não deixar água parada, manter caixas-d'água e reservatórios tampados, guardar garrafas e
@@ -287,9 +304,11 @@ conteúdo sem mexer no código.
 
 ### 7.1 Cenários
 
-O repositório tem seis mapas jogáveis. Os três marcados em **negrito** são os cenários
-oficiais dos experimentos (`OFFICIAL_SCENARIOS` em `config.py`). Os demais servem para
-demonstração e para testes adicionais.
+O repositório tem seis mapas jogáveis, descritos no Quadro 3. Os três marcados em
+**negrito** são os cenários oficiais dos experimentos (`OFFICIAL_SCENARIOS` em `config.py`).
+Os demais servem para demonstração e para testes adicionais.
+
+Quadro 3 – Características dos cenários
 
 | Cenário | Arquivo | Dimensão | Origem → Foco | Obstáculos internos | Grama / Difícil | Papel |
 |---|---|---|---|---:|---|---|
@@ -299,6 +318,8 @@ demonstração e para testes adicionais.
 | Especialista | `04_expert.json` | 15×16 | (1,1) → (1,14) | 71 | 1 / 1 | extra: vários corredores paralelos (pior caso da DFS) |
 | **3 – Complexo** | `05_cost_tradeoff.json` | 15×20 | (1,1) → (1,18) | 96 | 2 / 17 | rota curta por terreno difícil × rota longa e barata |
 | Sem rota | `06_impossible.json` | 7×8 | (1,1) → (3,3) | 11 | 0 / 0 | extra: foco cercado, testa a falha das buscas |
+
+Fonte: Autoria própria (2026).
 
 As coordenadas estão no formato (linha, coluna), começando em 0. Todos os mapas têm uma
 borda de obstáculos. O cenário intermediário tem 10×10, e não 12×12 como sugeria o plano
@@ -325,7 +346,11 @@ difícil (custo 65). O desvio pelo corredor da linha 3 tem 21 passos e custa ape
 
 ### 7.3 Resultados
 
-Tabela 1 – Resultados das execuções (tempo do usuário em segundos; dos algoritmos, em ms).
+A Tabela 1 reúne as 15 execuções obrigatórias. O tempo do usuário está em segundos e o
+dos algoritmos, em milissegundos. Os tempos variam entre máquinas e rodadas, e as demais
+colunas são sempre iguais.
+
+Tabela 1 – Resultados das execuções nos cenários oficiais
 
 | Cenário | Método | Passos | Custo | Tempo | Expandidos | Gerados | Fronteira máx. |
 |---|---|---:|---:|---:|---:|---:|---:|
@@ -345,33 +370,82 @@ Tabela 1 – Resultados das execuções (tempo do usuário em segundos; dos algo
 | 3 – Complexo | Gulosa | 17 | 65 | 0,080 ms | 18 | 19 | 2 |
 | 3 – Complexo | A\* | 21 | 21 | 0,112 ms | 23 | 26 | 4 |
 
-Fonte: `results/tabela_experimentos.md`. Os tempos variam entre máquinas e rodadas. As
-demais colunas são sempre iguais.
+Fonte: Autoria própria (2026).
 
-Figuras (geradas em `results/`):
+Os Gráficos 1 e 2 comparam a qualidade das soluções (custo e passos). Os Gráficos 3 a 5
+comparam o esforço de busca (estados expandidos, estados gerados e fronteira máxima), e o
+Gráfico 6 compara o tempo dos algoritmos.
 
-- Figura 1 – Custo total por método e cenário: ![Custo](../results/grafico_custo.png)
-- Figura 2 – Passos por método e cenário: ![Passos](../results/grafico_passos.png)
-- Figura 3 – Estados expandidos: ![Expandidos](../results/grafico_expandidos.png)
-- Figura 4 – Estados gerados: ![Gerados](../results/grafico_gerados.png)
-- Figura 5 – Tamanho máximo da fronteira: ![Fronteira](../results/grafico_fronteira.png)
-- Figura 6 – Tempo de execução dos algoritmos: ![Tempo](../results/grafico_tempo.png)
-- Figuras 7 a 9 – Caminhos de cada método nos cenários 1, 2 e 3:
-  ![Cenário 1](../results/caminhos_cenario1.png)
-  ![Cenário 2](../results/caminhos_cenario2.png)
-  ![Cenário 3](../results/caminhos_cenario3.png)
+Gráfico 1 – Custo total por método e cenário
+
+![Custo](../results/grafico_custo.png)
+
+Fonte: Autoria própria (2026).
+
+Gráfico 2 – Passos por método e cenário
+
+![Passos](../results/grafico_passos.png)
+
+Fonte: Autoria própria (2026).
+
+Gráfico 3 – Estados expandidos por algoritmo e cenário
+
+![Expandidos](../results/grafico_expandidos.png)
+
+Fonte: Autoria própria (2026).
+
+Gráfico 4 – Estados gerados por algoritmo e cenário
+
+![Gerados](../results/grafico_gerados.png)
+
+Fonte: Autoria própria (2026).
+
+Gráfico 5 – Tamanho máximo da fronteira por algoritmo e cenário
+
+![Fronteira](../results/grafico_fronteira.png)
+
+Fonte: Autoria própria (2026).
+
+Gráfico 6 – Tempo de execução dos algoritmos (mediana de 5 rodadas)
+
+![Tempo](../results/grafico_tempo.png)
+
+Fonte: Autoria própria (2026).
+
+As Figuras 2 a 4 mostram, sobre o mapa de cada cenário oficial, o caminho de cada método.
+O círculo azul marca a origem, e o X vermelho, o foco.
+
+Figura 2 – Caminhos de cada método no cenário 1 (simples)
+
+![Cenário 1](../results/caminhos_cenario1.png)
+
+Fonte: Autoria própria (2026).
+
+Figura 3 – Caminhos de cada método no cenário 2 (intermediário)
+
+![Cenário 2](../results/caminhos_cenario2.png)
+
+Fonte: Autoria própria (2026).
+
+Figura 4 – Caminhos de cada método no cenário 3 (complexo)
+
+![Cenário 3](../results/caminhos_cenario3.png)
+
+Fonte: Autoria própria (2026).
 
 O usuário também jogou os três cenários extras. Esses resultados ficam fora das 15
 execuções obrigatórias, mas ajudam na análise (algoritmos via
-`python scripts/run_scenarios.py`).
+`python scripts/run_scenarios.py`). A Tabela 2 mostra passos e custo de cada método.
 
-Tabela 2 – Cenários extras: passos / custo de cada método.
+Tabela 2 – Passos e custo de cada método nos cenários extras
 
 | Cenário | Usuário | BFS | DFS | Gulosa | A\* |
 |---|---|---|---|---|---|
 | Avançado (12×12) | 36 / 40 (7,0 s) | 32 / 34 | 36 / 37 | 34 / 38 | 32 / 33 |
 | Especialista (15×16) | 13 / 13 (1,2 s) | 13 / 13 | 39 / 39 | 13 / 13 | 13 / 13 |
 | Sem rota (7×8) | desistiu após 43 passos (19,6 s) | sem solução | sem solução | sem solução | sem solução |
+
+Fonte: Autoria própria (2026).
 
 - **Avançado:** o usuário avançou até (3,3), percebeu que o caminho não levava ao foco e voltou, com 36 passos e custo 40. Foi
   pior que os quatro algoritmos. BFS e A\* empatam em passos (32), mas o A\* encontra custo
@@ -468,7 +542,7 @@ Depende do algoritmo. Nos três cenários oficiais, o caminho do usuário foi **
 célula igual ao do A\***. Também coincidiu com o de BFS e Gulosa nos cenários 1 e 2, em que
 o caminho mais curto já é o mais barato. Foi diferente do da DFS em todos os cenários, e
 diferente do de BFS e Gulosa no cenário 3: o usuário desceu para o corredor da linha 3 em
-vez de atravessar a faixa de terreno difícil (Figura 9). No cenário "Avançado", o usuário
+vez de atravessar a faixa de terreno difícil (Figura 4). No cenário "Avançado", o usuário
 fez um caminho próprio, diferente do de todos os algoritmos.
 
 **13. Em quais situações o agente superou claramente o usuário?**

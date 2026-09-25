@@ -4,7 +4,8 @@ Repositório referente ao código desenvolvido para o Projeto 1 da disciplina de
 ## Planejamento e documentos
 
 - [docs/PLANO_DE_TRABALHO.md](docs/PLANO_DE_TRABALHO.md) — plano, arquitetura e divisão de tarefas.
-- [docs/RELATORIO.md](docs/RELATORIO.md) — relatório técnico (seções 1 a 10 do Apêndice A).
+- [docs/RELATORIO.md](docs/RELATORIO.md) — texto-fonte do relatório técnico (seções 1 a 10 do Apêndice A).
+- [docs/RELATORIO.docx](docs/RELATORIO.docx) — relatório no modelo da UTFPR (prévia em [docs/RELATORIO.pdf](docs/RELATORIO.pdf)).
 - [docs/ROTEIRO_APRESENTACAO.md](docs/ROTEIRO_APRESENTACAO.md) — roteiro e perguntas da defesa.
 - [docs/PROJETO.md](docs/PROJETO.md) — enunciado.
 
@@ -22,7 +23,7 @@ uv run pytest
 ```bash
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -e . matplotlib pytest
+pip install -e . matplotlib pytest python-docx pymupdf
 ```
 
 Depois disso, os comandos `uv run X` viram só `X`: `pytest`, `dengue` e `dengue-experimentos`. Também funcionam `python -m dengue_agent.main` e `python -m dengue_agent.experiments`.
@@ -59,3 +60,13 @@ uv run dengue-experimentos
 ```
 
 O script gera em `results/`: `experimentos.csv`, `experimentos.json`, `tabela_experimentos.md`, os gráficos `grafico_*.png` e os mapas de caminhos `caminhos_cenario*.png`. Para inspecionar todos os seis mapas no terminal, use `uv run python scripts/run_scenarios.py`.
+
+## Relatório no modelo da UTFPR
+
+O `docs/RELATORIO.docx` é gerado a partir do `docs/RELATORIO.md` sobre o modelo oficial `docs/modelo/modelo_utfpr_sem_licenca.docx`:
+
+```bash
+python scripts/gerar_relatorio_docx.py
+```
+
+Edite o texto no `.md` e os elementos pré-textuais (autores, professor, resumo, abstract, siglas e símbolos) em `PRE_TEXTUAL`, no início do script, e gere de novo. Com o LibreOffice instalado, o script calcula as páginas do sumário e das listas e gera a prévia `docs/RELATORIO.pdf`. Ao abrir o `.docx` no Word, aceite atualizar os campos. Para a versão final, exporte o PDF pelo Word.
