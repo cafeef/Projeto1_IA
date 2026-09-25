@@ -489,11 +489,12 @@ percebeu o que a Manhattan não percebe: a rota visualmente mais curta era a mai
 mapas pequenos, com poucos obstáculos e custos visíveis, a percepção humana foi tão boa
 quanto a busca ótima.
 
-**Ameaça à validade.** O enunciado pede uma única execução manual por cenário, antes de o
-usuário conhecer a solução do agente. **[PENDENTE: confirmar se cada cenário foi jogado
-antes de assistir aos algoritmos naquele cenário. Se não foi, registrar aqui que o usuário
-pode ter sido influenciado pela animação do agente.]** Além disso, há um único jogador, o
-que não permite generalizar o desempenho humano.
+**Ameaça à validade.** Conforme o enunciado, cada cenário foi jogado uma única vez e
+**antes** de o agente ser executado naquele cenário. O usuário só acionou os algoritmos
+depois de concluir a própria partida, então não conhecia o caminho do agente ao jogar. Ainda
+assim, há um único jogador, que conhecia o objetivo do projeto e os custos dos terrenos.
+Isso ajuda a explicar a coincidência com o A\* e não permite generalizar o desempenho
+humano.
 
 **15. Qual algoritmo seria mais adequado para esse problema?**
 O **A\***. É o único dos quatro que é completo, ótimo em custo e ainda usa a heurística para
