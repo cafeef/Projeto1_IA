@@ -60,7 +60,7 @@ PRE_TEXTUAL = {
         "de Inteligência Artificial, do Curso de Bacharelado em Ciência da Computação da "
         "Universidade Tecnológica Federal do Paraná, Campus Ponta Grossa."
     ),
-    "professor": "Professor(a): [NOME COMPLETO DO(A) PROFESSOR(A)].",
+    "professor": "Professora: Helyane Bronoski Borges.",
     "resumo": (
         "Este trabalho apresenta um ambiente de simulação em que um usuário humano e um "
         "agente inteligente resolvem a mesma missão: partir de uma posição inicial e alcançar "
