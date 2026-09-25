@@ -2,8 +2,7 @@
 
 > Versão de trabalho em Markdown. A versão entregue no Moodle deve ser transposta para o
 > modelo de trabalhos acadêmicos da UTFPR (capa, folha de rosto, sumário, listas de
-> figuras e tabelas). Trechos marcados com **[PENDENTE]** ainda precisam de informação da
-> equipe.
+> figuras e tabelas).
 
 ## 1. Introdução
 
@@ -320,8 +319,9 @@ difícil (custo 65). O desvio pelo corredor da linha 3 tem 21 passos e custa ape
 - O script grava `results/experimentos.csv` e `results/experimentos.json` (com os caminhos
   completos), `results/tabela_experimentos.md`, os gráficos `results/grafico_*.png` e os
   mapas com os caminhos `results/caminhos_cenario{1,2,3}.png`.
-- Ambiente de medição: Python 3.11, Linux. **[PENDENTE: registrar a máquina usada na
-  rodada final.]**
+- Ambiente de medição da rodada final: notebook ASUS Vivobook M1502YA, processador AMD
+  Ryzen 7 5825U, 16 GB de RAM, Ubuntu 24.04.5 LTS, Python 3.12.3, em ambiente virtual
+  (`venv`) com as dependências instaladas por `pip`.
 
 ### 7.3 Resultados
 
@@ -330,20 +330,20 @@ Tabela 1 – Resultados das execuções (tempo do usuário em segundos; dos algo
 | Cenário | Método | Passos | Custo | Tempo | Expandidos | Gerados | Fronteira máx. |
 |---|---|---:|---:|---:|---:|---:|---:|
 | 1 – Simples | Usuário | 9 | 10 | 4,7 s | — | — | — |
-| 1 – Simples | BFS | 9 | 10 | 0,107 ms | 20 | 23 | 3 |
-| 1 – Simples | DFS | 11 | 15 | 0,091 ms | 15 | 17 | 4 |
-| 1 – Simples | Gulosa | 9 | 10 | 0,081 ms | 10 | 13 | 4 |
-| 1 – Simples | A\* | 9 | 10 | 0,127 ms | 16 | 17 | 3 |
+| 1 – Simples | BFS | 9 | 10 | 0,089 ms | 20 | 23 | 3 |
+| 1 – Simples | DFS | 11 | 15 | 0,064 ms | 15 | 17 | 4 |
+| 1 – Simples | Gulosa | 9 | 10 | 0,047 ms | 10 | 13 | 4 |
+| 1 – Simples | A\* | 9 | 10 | 0,088 ms | 16 | 17 | 3 |
 | 2 – Intermediário | Usuário | 14 | 14 | 2,3 s | — | — | — |
-| 2 – Intermediário | BFS | 14 | 14 | 0,204 ms | 39 | 41 | 5 |
-| 2 – Intermediário | DFS | 16 | 19 | 0,123 ms | 18 | 22 | 5 |
-| 2 – Intermediário | Gulosa | 14 | 14 | 0,113 ms | 15 | 20 | 6 |
-| 2 – Intermediário | A\* | 14 | 14 | 0,123 ms | 20 | 26 | 7 |
+| 2 – Intermediário | BFS | 14 | 14 | 0,159 ms | 39 | 41 | 5 |
+| 2 – Intermediário | DFS | 16 | 19 | 0,073 ms | 18 | 22 | 5 |
+| 2 – Intermediário | Gulosa | 14 | 14 | 0,065 ms | 15 | 20 | 6 |
+| 2 – Intermediário | A\* | 14 | 14 | 0,101 ms | 20 | 26 | 7 |
 | 3 – Complexo | Usuário | 21 | 21 | 2,6 s | — | — | — |
-| 3 – Complexo | BFS | 17 | 65 | 0,457 ms | 77 | 84 | 7 |
-| 3 – Complexo | DFS | 41 | 41 | 0,680 ms | 122 | 128 | 8 |
-| 3 – Complexo | Gulosa | 17 | 65 | 0,097 ms | 18 | 19 | 2 |
-| 3 – Complexo | A\* | 21 | 21 | 0,139 ms | 23 | 26 | 4 |
+| 3 – Complexo | BFS | 17 | 65 | 0,313 ms | 77 | 84 | 7 |
+| 3 – Complexo | DFS | 41 | 41 | 0,502 ms | 122 | 128 | 8 |
+| 3 – Complexo | Gulosa | 17 | 65 | 0,080 ms | 18 | 19 | 2 |
+| 3 – Complexo | A\* | 21 | 21 | 0,112 ms | 23 | 26 | 4 |
 
 Fonte: `results/tabela_experimentos.md`. Os tempos variam entre máquinas e rodadas. As
 demais colunas são sempre iguais.
@@ -379,7 +379,7 @@ Tabela 2 – Cenários extras: passos / custo de cada método.
 - **Especialista:** a DFS produz um caminho de 39 passos, contra 13 das outras buscas e do
   usuário, e expande 99 estados.
 - **Sem rota:** as quatro buscas esgotam os 18 estados alcançáveis e informam que não há
-  solução em menos de 1 ms. O usuário deu duas voltas completas no anel de 14 células
+  solução em menos de 1 ms. O usuário deu duas voltas completas no anel de 18 células
   antes de desistir.
 
 ## 8. Análise dos Resultados
