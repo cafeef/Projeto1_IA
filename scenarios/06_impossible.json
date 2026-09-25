@@ -1,6 +1,7 @@
 {
   "name": "Desafio sem rota",
-  "message": "Quando um foco for identificado, isole a área e remova os recipientes que acumulam água.",
+  "focus": "Balde com água parada",
+  "message": "Baldes sem uso devem ficar de boca para baixo, cobertos ou ser descartados corretamente.",
   "grid": [
     "########",
     "#S.....#",

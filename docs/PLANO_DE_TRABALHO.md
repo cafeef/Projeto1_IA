@@ -222,6 +222,12 @@ Campos minimos:
 
 ## 5. Modelagem dos cenarios
 
+> Implementado: os cenarios oficiais sao `scenarios/01_simple.json` (8x8),
+> `02_intermediate.json` (10x10) e `05_cost_tradeoff.json` (15x20), listados em
+> `OFFICIAL_SCENARIOS` (`config.py`). O intermediario ficou 10x10 em vez de 12x12, o que foi
+> suficiente para ter becos e rotas alternativas (justificado no relatorio, Secao 7.1). Os
+> mapas `03_advanced`, `04_expert` e `06_impossible` sao extras, fora das 15 execucoes.
+
 ### Cenario 1 - Simples
 
 - Grade pequena, por exemplo 8x8.
@@ -458,20 +464,20 @@ Prazo sugerido: paralelo, somente depois que o nucleo Python estiver estavel.
 
 ## 10. Checklist de conformidade com a avaliacao
 
-- [ ] Modelagem correta do ambiente.
-- [ ] Usuario funcionando.
-- [ ] Usuario e agente atuando na mesma missao.
-- [ ] BFS implementada manualmente.
-- [ ] DFS implementada manualmente.
-- [ ] Busca Gulosa implementada manualmente.
-- [ ] A* implementado manualmente.
-- [ ] Heuristica definida, justificada e discutida.
-- [ ] Conteudo educacional apresentado.
-- [ ] Tres cenarios implementados.
-- [ ] Resultados gerados para 15 execucoes.
-- [ ] Tabelas e graficos no relatorio.
-- [ ] Analise comparativa responde as perguntas obrigatorias.
-- [ ] Codigo organizado.
+- [x] Modelagem correta do ambiente.
+- [x] Usuario funcionando.
+- [x] Usuario e agente atuando na mesma missao.
+- [x] BFS implementada manualmente.
+- [x] DFS implementada manualmente.
+- [x] Busca Gulosa implementada manualmente.
+- [x] A* implementado manualmente.
+- [x] Heuristica definida, justificada e discutida.
+- [x] Conteudo educacional apresentado.
+- [x] Tres cenarios implementados.
+- [x] Resultados gerados para 15 execucoes.
+- [x] Tabelas e graficos no relatorio.
+- [x] Analise comparativa responde as perguntas obrigatorias.
+- [x] Codigo organizado.
 - [ ] Todos os membros conseguem explicar sua parte e a visao geral.
 - [ ] Bonus Godot nao compromete a implementacao principal.
 

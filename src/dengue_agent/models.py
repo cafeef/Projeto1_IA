@@ -26,6 +26,8 @@ class Scenario:
     grid: list[list[CellType]]
     start: Position
     goal: Position
+    # Criadouro representado pelo foco; dá título à mensagem educativa.
+    focus: str = "Foco de dengue"
 
     @property
     def rows(self) -> int:

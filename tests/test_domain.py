@@ -42,3 +42,9 @@ def test_rota_mais_barata() -> None:
 
     assert len(longer_path) > 17
     assert sum(problem.cost(position) for position in longer_path) < direct_cost
+
+
+def test_foco_educativo() -> None:
+    for scenario in load_scenarios(MAPS):
+        assert scenario.focus and scenario.focus != "Foco de dengue"
+        assert scenario.message

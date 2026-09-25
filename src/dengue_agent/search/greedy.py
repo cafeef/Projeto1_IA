@@ -36,7 +36,7 @@ def greedy_search(problem: GridProblem) -> SearchResult:
     if problem.is_goal(root.position):
         elapsed_ms = (perf_counter() - start_time) * 1000
         return SearchResult(
-            algorithm="Greedy",
+            algorithm="Gulosa",
             found=True,
             path=[root.position],
             cost=0,
@@ -82,7 +82,7 @@ def greedy_search(problem: GridProblem) -> SearchResult:
             path = reconstruct_path(node)
             elapsed_ms = (perf_counter() - start_time) * 1000
             return SearchResult(
-                algorithm="Greedy",
+                algorithm="Gulosa",
                 found=True,
                 path=path,
                 cost=node.path_cost,
@@ -114,7 +114,7 @@ def greedy_search(problem: GridProblem) -> SearchResult:
 
     elapsed_ms = (perf_counter() - start_time) * 1000
     return SearchResult(
-        algorithm="Greedy",
+        algorithm="Gulosa",
         found=False,
         expanded_states=expanded,
         generated_states=generated,

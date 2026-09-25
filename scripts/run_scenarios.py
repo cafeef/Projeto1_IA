@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from dengue_agent.metrics import run_all
-from dengue_agent.scenarios import load_scenario  # ajuste se o nome for outro
+from dengue_agent.scenarios import load_scenario
 
 
 SCENARIOS_DIR = ROOT / "scenarios"
