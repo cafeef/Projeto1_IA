@@ -1,11 +1,64 @@
 [
   {
     "scenario": "Quintal simples",
+    "method": "Usuário",
+    "found": true,
+    "steps": 9,
+    "cost": 10,
+    "time_ms": 4722.0,
+    "expanded_states": null,
+    "generated_states": null,
+    "max_frontier_size": null,
+    "path": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        5,
+        6
+      ]
+    ]
+  },
+  {
+    "scenario": "Quintal simples",
     "method": "BFS",
     "found": true,
     "steps": 9,
     "cost": 10,
-    "time_ms": 0.08825700001580117,
+    "time_ms": 0.10746399999561618,
     "expanded_states": 20,
     "generated_states": 23,
     "max_frontier_size": 3,
@@ -58,7 +111,7 @@
     "found": true,
     "steps": 11,
     "cost": 15,
-    "time_ms": 0.07831900001065151,
+    "time_ms": 0.0905210000041734,
     "expanded_states": 15,
     "generated_states": 17,
     "max_frontier_size": 4,
@@ -119,7 +172,7 @@
     "found": true,
     "steps": 9,
     "cost": 10,
-    "time_ms": 0.054247999969447847,
+    "time_ms": 0.08137300000043979,
     "expanded_states": 10,
     "generated_states": 13,
     "max_frontier_size": 4,
@@ -172,7 +225,7 @@
     "found": true,
     "steps": 9,
     "cost": 10,
-    "time_ms": 0.090730000010808,
+    "time_ms": 0.12669500000583866,
     "expanded_states": 16,
     "generated_states": 17,
     "max_frontier_size": 3,
@@ -221,11 +274,84 @@
   },
   {
     "scenario": "Quintal intermediário",
+    "method": "Usuário",
+    "found": true,
+    "steps": 14,
+    "cost": 14,
+    "time_ms": 2259.0,
+    "expanded_states": null,
+    "generated_states": null,
+    "max_frontier_size": null,
+    "path": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        8,
+        8
+      ]
+    ]
+  },
+  {
+    "scenario": "Quintal intermediário",
     "method": "BFS",
     "found": true,
     "steps": 14,
     "cost": 14,
-    "time_ms": 0.1737960000127714,
+    "time_ms": 0.2036870000097224,
     "expanded_states": 39,
     "generated_states": 41,
     "max_frontier_size": 5,
@@ -298,7 +424,7 @@
     "found": true,
     "steps": 16,
     "cost": 19,
-    "time_ms": 0.07868000000144093,
+    "time_ms": 0.12260600001923194,
     "expanded_states": 18,
     "generated_states": 22,
     "max_frontier_size": 5,
@@ -379,7 +505,7 @@
     "found": true,
     "steps": 14,
     "cost": 14,
-    "time_ms": 0.07222200002843238,
+    "time_ms": 0.11321900001348695,
     "expanded_states": 15,
     "generated_states": 20,
     "max_frontier_size": 6,
@@ -452,7 +578,7 @@
     "found": true,
     "steps": 14,
     "cost": 14,
-    "time_ms": 0.10879899997462417,
+    "time_ms": 0.12263600001460873,
     "expanded_states": 20,
     "generated_states": 26,
     "max_frontier_size": 7,
@@ -521,11 +647,112 @@
   },
   {
     "scenario": "Quintal complexo: passos versus custo",
+    "method": "Usuário",
+    "found": true,
+    "steps": 21,
+    "cost": 21,
+    "time_ms": 2627.0,
+    "expanded_states": null,
+    "generated_states": null,
+    "max_frontier_size": null,
+    "path": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        3,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        12
+      ],
+      [
+        3,
+        13
+      ],
+      [
+        3,
+        14
+      ],
+      [
+        3,
+        15
+      ],
+      [
+        3,
+        16
+      ],
+      [
+        3,
+        17
+      ],
+      [
+        3,
+        18
+      ],
+      [
+        2,
+        18
+      ],
+      [
+        1,
+        18
+      ]
+    ]
+  },
+  {
+    "scenario": "Quintal complexo: passos versus custo",
     "method": "BFS",
     "found": true,
     "steps": 17,
     "cost": 65,
-    "time_ms": 0.34912699999267716,
+    "time_ms": 0.4567500000121072,
     "expanded_states": 77,
     "generated_states": 84,
     "max_frontier_size": 7,
@@ -610,7 +837,7 @@
     "found": true,
     "steps": 41,
     "cost": 41,
-    "time_ms": 0.5583369999726528,
+    "time_ms": 0.679784999988442,
     "expanded_states": 122,
     "generated_states": 128,
     "max_frontier_size": 8,
@@ -791,7 +1018,7 @@
     "found": true,
     "steps": 17,
     "cost": 65,
-    "time_ms": 0.08470399995985645,
+    "time_ms": 0.09666799999763498,
     "expanded_states": 18,
     "generated_states": 19,
     "max_frontier_size": 2,
@@ -876,7 +1103,7 @@
     "found": true,
     "steps": 21,
     "cost": 21,
-    "time_ms": 0.11933399997587912,
+    "time_ms": 0.13944599999149432,
     "expanded_states": 23,
     "generated_states": 26,
     "max_frontier_size": 4,

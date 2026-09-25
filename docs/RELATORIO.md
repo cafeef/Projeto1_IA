@@ -2,8 +2,8 @@
 
 > Versão de trabalho em Markdown. A versão entregue no Moodle deve ser transposta para o
 > modelo de trabalhos acadêmicos da UTFPR (capa, folha de rosto, sumário, listas de
-> figuras e tabelas). Trechos marcados com **[PENDENTE]** dependem das execuções humanas
-> (ver Seção 7.3).
+> figuras e tabelas). Trechos marcados com **[PENDENTE]** ainda precisam de informação da
+> equipe.
 
 ## 1. Introdução
 
@@ -329,21 +329,21 @@ Tabela 1 – Resultados das execuções (tempo do usuário em segundos; dos algo
 
 | Cenário | Método | Passos | Custo | Tempo | Expandidos | Gerados | Fronteira máx. |
 |---|---|---:|---:|---:|---:|---:|---:|
-| 1 – Simples | Usuário | **[PENDENTE]** | **[PENDENTE]** | **[PENDENTE]** | — | — | — |
-| 1 – Simples | BFS | 9 | 10 | 0,088 ms | 20 | 23 | 3 |
-| 1 – Simples | DFS | 11 | 15 | 0,078 ms | 15 | 17 | 4 |
-| 1 – Simples | Gulosa | 9 | 10 | 0,054 ms | 10 | 13 | 4 |
-| 1 – Simples | A\* | 9 | 10 | 0,091 ms | 16 | 17 | 3 |
-| 2 – Intermediário | Usuário | **[PENDENTE]** | **[PENDENTE]** | **[PENDENTE]** | — | — | — |
-| 2 – Intermediário | BFS | 14 | 14 | 0,174 ms | 39 | 41 | 5 |
-| 2 – Intermediário | DFS | 16 | 19 | 0,079 ms | 18 | 22 | 5 |
-| 2 – Intermediário | Gulosa | 14 | 14 | 0,072 ms | 15 | 20 | 6 |
-| 2 – Intermediário | A\* | 14 | 14 | 0,109 ms | 20 | 26 | 7 |
-| 3 – Complexo | Usuário | **[PENDENTE]** | **[PENDENTE]** | **[PENDENTE]** | — | — | — |
-| 3 – Complexo | BFS | 17 | 65 | 0,349 ms | 77 | 84 | 7 |
-| 3 – Complexo | DFS | 41 | 41 | 0,558 ms | 122 | 128 | 8 |
-| 3 – Complexo | Gulosa | 17 | 65 | 0,085 ms | 18 | 19 | 2 |
-| 3 – Complexo | A\* | 21 | 21 | 0,119 ms | 23 | 26 | 4 |
+| 1 – Simples | Usuário | 9 | 10 | 4,7 s | — | — | — |
+| 1 – Simples | BFS | 9 | 10 | 0,107 ms | 20 | 23 | 3 |
+| 1 – Simples | DFS | 11 | 15 | 0,091 ms | 15 | 17 | 4 |
+| 1 – Simples | Gulosa | 9 | 10 | 0,081 ms | 10 | 13 | 4 |
+| 1 – Simples | A\* | 9 | 10 | 0,127 ms | 16 | 17 | 3 |
+| 2 – Intermediário | Usuário | 14 | 14 | 2,3 s | — | — | — |
+| 2 – Intermediário | BFS | 14 | 14 | 0,204 ms | 39 | 41 | 5 |
+| 2 – Intermediário | DFS | 16 | 19 | 0,123 ms | 18 | 22 | 5 |
+| 2 – Intermediário | Gulosa | 14 | 14 | 0,113 ms | 15 | 20 | 6 |
+| 2 – Intermediário | A\* | 14 | 14 | 0,123 ms | 20 | 26 | 7 |
+| 3 – Complexo | Usuário | 21 | 21 | 2,6 s | — | — | — |
+| 3 – Complexo | BFS | 17 | 65 | 0,457 ms | 77 | 84 | 7 |
+| 3 – Complexo | DFS | 41 | 41 | 0,680 ms | 122 | 128 | 8 |
+| 3 – Complexo | Gulosa | 17 | 65 | 0,097 ms | 18 | 19 | 2 |
+| 3 – Complexo | A\* | 21 | 21 | 0,139 ms | 23 | 26 | 4 |
 
 Fonte: `results/tabela_experimentos.md`. Os tempos variam entre máquinas e rodadas. As
 demais colunas são sempre iguais.
@@ -361,13 +361,26 @@ Figuras (geradas em `results/`):
   ![Cenário 2](../results/caminhos_cenario2.png)
   ![Cenário 3](../results/caminhos_cenario3.png)
 
-Nos cenários extras, as buscas se comportam assim (`python scripts/run_scenarios.py`):
+O usuário também jogou os três cenários extras. Esses resultados ficam fora das 15
+execuções obrigatórias, mas ajudam na análise (algoritmos via
+`python scripts/run_scenarios.py`).
 
-- **Especialista:** a DFS produz um caminho de 39 passos, contra 13 das outras buscas, e
-  expande 99 estados.
-- **Avançado:** BFS e A\* empatam em passos (32), mas o A\* encontra custo 33 contra 34.
+Tabela 2 – Cenários extras: passos / custo de cada método.
+
+| Cenário | Usuário | BFS | DFS | Gulosa | A\* |
+|---|---|---|---|---|---|
+| Avançado (12×12) | 36 / 40 (7,0 s) | 32 / 34 | 36 / 37 | 34 / 38 | 32 / 33 |
+| Especialista (15×16) | 13 / 13 (1,2 s) | 13 / 13 | 39 / 39 | 13 / 13 | 13 / 13 |
+| Sem rota (7×8) | desistiu após 43 passos (19,6 s) | sem solução | sem solução | sem solução | sem solução |
+
+- **Avançado:** o usuário avançou até (3,3), percebeu que o caminho não levava ao foco e voltou, com 36 passos e custo 40. Foi
+  pior que os quatro algoritmos. BFS e A\* empatam em passos (32), mas o A\* encontra custo
+  33 contra 34.
+- **Especialista:** a DFS produz um caminho de 39 passos, contra 13 das outras buscas e do
+  usuário, e expande 99 estados.
 - **Sem rota:** as quatro buscas esgotam os 18 estados alcançáveis e informam que não há
-  solução.
+  solução em menos de 1 ms. O usuário deu duas voltas completas no anel de 14 células
+  antes de desistir.
 
 ## 8. Análise dos Resultados
 
@@ -444,24 +457,43 @@ estados a mais que a Gulosa (23 × 18) e entregou um caminho três vezes mais ba
 foi mais rápido e expandiu muito menos que BFS e DFS.
 
 **11. O usuário conseguiu obter menor custo que algum dos algoritmos?**
-**[PENDENTE: preencher com a Tabela 1 após as execuções humanas.]** Comparar o custo do
-usuário com os quatro algoritmos em cada cenário. No cenário 3, basta o usuário não seguir
-a linha de terreno difícil para superar BFS e Gulosa (65), e uma rota pelos corredores
-livres pode superar a DFS (41). O usuário só pode empatar com o A\*, nunca superá-lo, porque
-o A\* é ótimo.
+Sim. Nos três cenários oficiais, o usuário alcançou o **custo ótimo** (10, 14 e 21),
+empatando com o A\*. Assim, teve custo menor que a DFS nos três cenários (15, 19 e 41) e
+menor que BFS e Gulosa no cenário 3 (65 contra 21, cerca de um terço). Como o A\* é ótimo,
+o usuário no máximo empata com ele, e foi o que aconteceu. No cenário extra "Avançado", o
+usuário teve o maior custo entre todos os métodos (40, contra 33 a 38).
 
 **12. Usuário e agente escolheram caminhos diferentes?**
-**[PENDENTE: comparar `caminhos_cenario*.png` e o campo `path` de `experimentos.json`.]**
+Depende do algoritmo. Nos três cenários oficiais, o caminho do usuário foi **célula por
+célula igual ao do A\***. Também coincidiu com o de BFS e Gulosa nos cenários 1 e 2, em que
+o caminho mais curto já é o mais barato. Foi diferente do da DFS em todos os cenários, e
+diferente do de BFS e Gulosa no cenário 3: o usuário desceu para o corredor da linha 3 em
+vez de atravessar a faixa de terreno difícil (Figura 9). No cenário "Avançado", o usuário
+fez um caminho próprio, diferente do de todos os algoritmos.
 
 **13. Em quais situações o agente superou claramente o usuário?**
-**[PENDENTE.]** Pontos a verificar: (a) tempo, em que o agente leva menos de 1 ms e o usuário
-leva segundos; (b) o cenário 3, se o usuário escolheu a rota visualmente mais curta; (c) o
-cenário 2, se o usuário entrou em algum beco.
+- **Tempo:** o agente decide em menos de 1 ms, enquanto o usuário levou de 2,3 s a 4,7 s
+  nos cenários oficiais. A comparação é só indicativa, porque o tempo humano inclui leitura
+  do mapa e reação.
+- **Labirintos com desvios:** no cenário "Avançado", o usuário seguiu um desvio que não levava ao foco e voltou,
+  gastando 4 passos e 7 unidades de custo a mais que o A\*. Mapas com muitos desvios
+  escondidos são justamente onde a busca sistemática vence a inspeção visual.
+- **Cenário sem rota:** as buscas provam que não há solução ao esgotar os 18 estados
+  alcançáveis. O usuário andou 43 passos e levou 19,6 s para concluir o mesmo.
 
 **14. Em quais situações o usuário apresentou desempenho semelhante ou superior?**
-**[PENDENTE.]** A expectativa é empate com BFS, Gulosa e A\* no cenário 1, que é pequeno e
-tem custos quase uniformes, e desempenho superior à DFS em passos e custo sempre que o
-usuário evitar desvios.
+Nos três cenários oficiais e no "Especialista", o usuário empatou com o melhor algoritmo em
+passos e custo. Ele foi **superior** à DFS em todos esses cenários e superior a BFS e Gulosa
+no cenário 3. Nesse cenário, a faixa de terreno difícil é bem visível (marrom), e o usuário
+percebeu o que a Manhattan não percebe: a rota visualmente mais curta era a mais cara. Em
+mapas pequenos, com poucos obstáculos e custos visíveis, a percepção humana foi tão boa
+quanto a busca ótima.
+
+**Ameaça à validade.** O enunciado pede uma única execução manual por cenário, antes de o
+usuário conhecer a solução do agente. **[PENDENTE: confirmar se cada cenário foi jogado
+antes de assistir aos algoritmos naquele cenário. Se não foi, registrar aqui que o usuário
+pode ter sido influenciado pela animação do agente.]** Além disso, há um único jogador, o
+que não permite generalizar o desempenho humano.
 
 **15. Qual algoritmo seria mais adequado para esse problema?**
 O **A\***. É o único dos quatro que é completo, ótimo em custo e ainda usa a heurística para
@@ -491,7 +523,11 @@ em que usuário e agente resolvem a mesma missão. Os experimentos confirmaram a
   custo, explorando pouco mais que a Gulosa.
 
 O cenário complexo mostrou concretamente que o caminho com menos passos pode custar o
-triplo do caminho ótimo. **[PENDENTE: síntese da comparação humano × agente.]**
+triplo do caminho ótimo. Na comparação com o usuário, a percepção humana alcançou a solução
+ótima nos três cenários oficiais, com o mesmo caminho do A\*, e superou BFS, DFS e Gulosa
+quando o custo do terreno estava visível. Por outro lado, o usuário errou em um labirinto
+com desvios (cenário "Avançado") e demorou a concluir que o foco isolado era inalcançável.
+Nessas situações, a busca sistemática é mais confiável.
 
 **Limitações.**
 
@@ -500,6 +536,8 @@ triplo do caminho ótimo. **[PENDENTE: síntese da comparação humano × agente
 - Os custos são fixos no código (`grid.py`).
 - O tempo do usuário inclui reação e leitura do mapa, então não é diretamente comparável ao
   tempo computacional do agente.
+- Há apenas um jogador humano e uma partida por cenário, o que não permite generalizar a
+  comparação humano × agente.
 - Os mapas são pequenos, então as diferenças de tempo entre algoritmos ficam abaixo de 1 ms.
 
 **Dificuldades.**

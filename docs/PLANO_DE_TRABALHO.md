@@ -474,9 +474,9 @@ Prazo sugerido: paralelo, somente depois que o nucleo Python estiver estavel.
 - [x] Heuristica definida, justificada e discutida.
 - [x] Conteudo educacional apresentado.
 - [x] Tres cenarios implementados.
-- [ ] Resultados gerados para 15 execucoes. (12 algoritmicas prontas; faltam as 3 humanas)
+- [x] Resultados gerados para 15 execucoes.
 - [x] Tabelas e graficos no relatorio.
-- [ ] Analise comparativa responde as perguntas obrigatorias. (faltam 11 a 14, dependem das execucoes humanas)
+- [x] Analise comparativa responde as perguntas obrigatorias.
 - [x] Codigo organizado.
 - [ ] Todos os membros conseguem explicar sua parte e a visao geral.
 - [ ] Bonus Godot nao compromete a implementacao principal.
