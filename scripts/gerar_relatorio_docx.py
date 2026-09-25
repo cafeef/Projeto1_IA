@@ -45,8 +45,13 @@ OUTPUT = ROOT / "docs" / "RELATORIO.docx"
 # ------------------------------------------------------------ pré-textuais
 
 PRE_TEXTUAL = {
-    # Nomes em ordem alfabética. Conferir a grafia completa antes da entrega.
-    "autores": ["ANDRÉ M. DA SILVA", "BRYAN BETIM", "FERNANDA PACHECO", "OTÁVIO HRUBA"],
+    # Nomes completos, em ordem alfabética.
+    "autores": [
+        "ANDRÉ MARTINS DA SILVA",
+        "BRYAN WILLIAN DE OLIVEIRA BETIM",
+        "FERNANDA PACHECO BENTO",
+        "OTÁVIO LUIS HRUBA",
+    ],
     "titulo": "AGENTE DE COMBATE À DENGUE: RESOLUÇÃO DE PROBLEMA POR MEIO DE ALGORITMOS DE BUSCA",
     "cidade": "PONTA GROSSA",
     "ano": "2026",

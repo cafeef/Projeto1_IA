@@ -563,12 +563,12 @@ percebeu o que a Manhattan não percebe: a rota visualmente mais curta era a mai
 mapas pequenos, com poucos obstáculos e custos visíveis, a percepção humana foi tão boa
 quanto a busca ótima.
 
-**Ameaça à validade.** Conforme o enunciado, cada cenário foi jogado uma única vez e
-**antes** de o agente ser executado naquele cenário. O usuário só acionou os algoritmos
-depois de concluir a própria partida, então não conhecia o caminho do agente ao jogar. Ainda
-assim, há um único jogador, que conhecia o objetivo do projeto e os custos dos terrenos.
-Isso ajuda a explicar a coincidência com o A\* e não permite generalizar o desempenho
-humano.
+**Condições da execução humana.** O procedimento seguiu o enunciado: cada cenário oficial
+foi jogado uma única vez e **antes** de o agente ser executado naquele cenário, totalizando
+as três execuções humanas exigidas. Como o usuário só acionou os algoritmos depois de
+concluir a própria partida, não conhecia o caminho do agente ao jogar. Vale observar que o
+usuário conhecia o objetivo do projeto e os custos dos terrenos, o que favorece escolhas
+atentas ao custo e ajuda a explicar a coincidência com o A\*.
 
 **15. Qual algoritmo seria mais adequado para esse problema?**
 O **A\***. É o único dos quatro que é completo, ótimo em custo e ainda usa a heurística para
@@ -611,8 +611,6 @@ Nessas situações, a busca sistemática é mais confiável.
 - Os custos são fixos no código (`grid.py`).
 - O tempo do usuário inclui reação e leitura do mapa, então não é diretamente comparável ao
   tempo computacional do agente.
-- Há apenas um jogador humano e uma partida por cenário, o que não permite generalizar a
-  comparação humano × agente.
 - Os mapas são pequenos, então as diferenças de tempo entre algoritmos ficam abaixo de 1 ms.
 
 **Dificuldades.**
