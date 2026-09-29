@@ -9,7 +9,7 @@ heurística e os resultados.
 - [ ] `uv sync` feito na máquina da apresentação; `uv run dengue` abre a janela.
 - [ ] `uv run pytest` passando (mostrar se perguntarem sobre testes).
 - [ ] `results/` com os gráficos da rodada final abertos em outra aba.
-- [ ] Godot 4.5 instalada e `bonus_godot/project.godot` aberto (ou a versão exportada), com o som ligado.
+- [ ] Godot (4.5 ou mais recente) instalada e `bonus_godot/project.godot` aberto (ou a versão exportada), com o som ligado.
 - [ ] Não jogar os cenários oficiais antes da demonstração, para não gerar partidas extras em
       `results/human_runs.jsonl`. Se precisar, use uma cópia do repositório.
 

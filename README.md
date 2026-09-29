@@ -8,7 +8,7 @@ Repositório referente ao código desenvolvido para o Projeto 1 da disciplina de
 - [docs/RELATORIO.docx](docs/RELATORIO.docx) — relatório no modelo da UTFPR (prévia em [docs/RELATORIO.pdf](docs/RELATORIO.pdf)).
 - [docs/ROTEIRO_APRESENTACAO.md](docs/ROTEIRO_APRESENTACAO.md) — roteiro e perguntas da defesa.
 - [docs/PROJETO.md](docs/PROJETO.md) — enunciado.
-- [bonus_godot/README.md](bonus_godot/README.md) — jogo educativo bônus em Godot 4.5.
+- [bonus_godot/README.md](bonus_godot/README.md) — jogo educativo bônus em Godot (4.5 ou mais recente).
 
 ## Desenvolvimento
 
@@ -74,4 +74,4 @@ Edite o texto no `.md` e os elementos pré-textuais (autores, professor, resumo,
 
 ## Bônus: jogo educativo em Godot
 
-`bonus_godot/` é um projeto Godot 4.5 com o jogo "Missão Dengue", para crianças e alunos com deficiência intelectual. Tem as 6 fases, o Robô Ajudante com BFS, DFS, Gulosa e A\* escritos à mão em GDScript, cartões educativos com leitura em voz alta, modo professor e um editor e gerador de fases. Para jogar, abra `bonus_godot/project.godot` na Godot 4.5. Detalhes em [bonus_godot/README.md](bonus_godot/README.md).
+`bonus_godot/` é um projeto Godot (4.5 ou mais recente) com o jogo "Missão Dengue", para crianças e alunos com deficiência intelectual. Tem as 6 fases, o Robô Ajudante com BFS, DFS, Gulosa e A\* escritos à mão em GDScript, cartões educativos com leitura em voz alta, modo professor e um editor e gerador de fases. Para jogar, abra `bonus_godot/project.godot` na Godot. Detalhes em [bonus_godot/README.md](bonus_godot/README.md).

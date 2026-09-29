@@ -35,7 +35,7 @@ func _run() -> void:
 	await process_frame
 	main.play_level(0)  # Quintal simples: S em (1,1), F em (6,5)
 	await process_frame
-	var game = main.current  # sem tipo: no modo --script o autoload Voz ainda não existe ao compilar
+	var game: GameScreen = main.current
 	_check(not game.mission_started, "missão espera o 'Vamos lá!'")
 	game._begin_mission()
 	await process_frame
@@ -52,7 +52,7 @@ func _run() -> void:
 	_check(game.player_done and game.player_steps == 9 and game.player_cost == 10, "chega ao foco com 9 passos e energia 10")
 	_check(game._stars() == 3, "3 estrelas no custo ótimo")
 	_check(not game.robot.is_empty() and game.robot["algorithm"] == "A*", "robô começa depois que a criança chega")
-	_check(root.get_node("Voz").text("resultado_3").begins_with("Perfeito"), "frases carregadas de audio/frases.json")
+	_check(Voz.text("resultado_3").begins_with("Perfeito"), "frases carregadas de audio/frases.json")
 	quit(1 if failures else 0)
 
 

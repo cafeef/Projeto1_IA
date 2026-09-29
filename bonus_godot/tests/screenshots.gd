@@ -27,7 +27,7 @@ func _shot(name: String) -> void:
 	print("captura: ", name)
 
 
-func _moves(game, moves: Array) -> void:
+func _moves(game: GameScreen, moves: Array) -> void:
 	for m in moves:
 		game._try_move(m)
 		await _wait(0.12)
@@ -49,7 +49,7 @@ func _run() -> void:
 	main.play_level(4)
 	await _wait(0.5)
 	await _shot("04_instrucao")
-	var game = main.current  # sem tipo: no modo --script o autoload Voz ainda não existe ao compilar
+	var game: GameScreen = main.current
 	game._begin_mission()
 	var up := Vector2i(0, -1)
 	var down := Vector2i(0, 1)

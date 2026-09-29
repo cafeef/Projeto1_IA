@@ -1,4 +1,4 @@
-# Missão Dengue — jogo educativo (bônus, Godot 4.5)
+# Missão Dengue — jogo educativo (bônus, Godot 4.5+)
 
 Versão jogável do ambiente de simulação, pensada para **crianças do Ensino Fundamental e
 alunos com deficiência intelectual** (item 2.11 do enunciado). A criança e o **Robô Ajudante**
@@ -10,7 +10,7 @@ criadouro encontrado e uma orientação de prevenção.
 
 ## Como abrir e jogar
 
-1. Instale a [Godot 4.5](https://godotengine.org/download) (versão padrão, sem .NET).
+1. Instale a [Godot 4.5 ou mais recente](https://godotengine.org/download) (versão padrão, sem .NET). Testado na 4.5.1 e na 4.7.1.
 2. Na Godot, clique em **Importar**, escolha `bonus_godot/project.godot` e depois **Executar** (F5).
 
 Pelo terminal: `godot --path bonus_godot`.
@@ -108,7 +108,7 @@ bonus_godot/
     board.gd, art.gd        desenho do tabuleiro, personagens e criadouros
     ui.gd, sfx.gd           componentes de interface e sons sintetizados
     progress.gd             estrelas e fases salvas
-    voz.gd                  autoload "Voz": toca as gravações ou usa a voz do sistema
+    voz.gd                  classe Voz: toca as gravações ou usa a voz do sistema
   audio/frases.json         textos falados (e exibidos) no jogo
   audio/voz/                gravações das falas (ver audio/README.md)
   audio/gerar_vozes.py      gera as falas com voz neural ou lista o roteiro de gravação
