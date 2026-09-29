@@ -9,8 +9,12 @@ signal exit_requested
 signal next_requested
 signal replay_requested
 
-const EXPLORE_DT := 0.06  # tempo para mostrar cada estado que o robô olhou
-const WALK_DT := 0.3  # tempo para o robô andar uma casa
+## A vez do robô dura poucos segundos em qualquer mapa: o passo da animação
+## encurta quando há muitos estados ou casas (a criança já está esperando).
+const EXPLORE_DT := 0.05  # tempo máximo para mostrar cada estado que o robô olhou
+const WALK_DT := 0.22  # tempo máximo para o robô andar uma casa
+const EXPLORE_TOTAL := 1.5  # duração máxima da fase "pensando"
+const WALK_TOTAL := 2.5  # duração máxima da caminhada
 const KEYS := {
 	KEY_UP: Vector2i(0, -1), KEY_W: Vector2i(0, -1),
 	KEY_RIGHT: Vector2i(1, 0), KEY_D: Vector2i(1, 0),
@@ -39,12 +43,16 @@ var _clock_start := -1
 var _clock_end := -1
 var _robot_timer := 0.0
 var _finish_timer := -1.0
+var _result_shown := false
 var _toast_timer := 0.0
 var _you_stats: Label
 var _robot_status: Label
 var _robot_stats: Label
 var _toast: Label
 var _overlay: Control
+var _action: Button  # "Não consigo chegar" e, na vez do robô, "Ver resultado"
+var _explore_dt := EXPLORE_DT
+var _walk_dt := WALK_DT
 
 
 func start(p: GridProblem, id: String, title: String, next_exists: bool, sounds: Sfx, alg := "A*") -> void:
@@ -88,7 +96,8 @@ func _build() -> void:
 		for name in Search.NAMES:
 			var color := UI.PURPLE if name == algorithm else UI.GRAY
 			top.add_child(UI.button(name, color, _choose_algorithm.bind(name), Vector2(96, 60), 22))
-	top.add_child(UI.button("Não consigo chegar", UI.GRAY, _give_up, Vector2(0, 60), 20))
+	_action = UI.button("Não consigo chegar", UI.GRAY, _on_action, Vector2(0, 60), 20)
+	top.add_child(_action)
 	top.add_child(UI.icon_button(func(ci, s, _t): UI.draw_speaker(ci, s), UI.BLUE, _speak_instructions, Vector2(72, 60)))
 
 	var main := UI.hbox(16)
@@ -233,7 +242,27 @@ func _begin_mission() -> void:
 func _start_robot() -> void:
 	robot = Search.run(algorithm, problem)
 	board.robot_result = robot
-	_robot_timer = -0.8  # pequena pausa para a criança ver o robô entrar
+	_robot_timer = -0.5  # pequena pausa para a criança ver o robô entrar
+	_explore_dt = minf(EXPLORE_DT, EXPLORE_TOTAL / maxf(1.0, robot["explored"].size()))
+	_walk_dt = minf(WALK_DT, WALK_TOTAL / maxf(1.0, robot["steps"]))
+	_action.text = "Ver resultado"
+	_update_panels()
+
+
+func _on_action() -> void:
+	if not player_done:
+		_give_up()
+	elif not robot.is_empty() and not robot_done:
+		_skip_robot()
+
+
+## Pula a animação do robô e vai direto para o resultado.
+func _skip_robot() -> void:
+	board.robot_explored = robot["explored"].size()
+	if robot["found"]:
+		board.robot_step = robot["path"].size() - 1
+	robot_done = true
+	_finish_timer = 0.3
 	_update_panels()
 
 
@@ -311,24 +340,27 @@ func _process(delta: float) -> void:
 		_robot_timer += delta
 		var explored: Array = robot["explored"]
 		if board.robot_explored < explored.size():
-			while _robot_timer >= EXPLORE_DT and board.robot_explored < explored.size():
-				_robot_timer -= EXPLORE_DT
+			while _robot_timer >= _explore_dt and board.robot_explored < explored.size():
+				_robot_timer -= _explore_dt
 				board.robot_explored += 1
 		elif not robot["found"]:
 			robot_done = true
 			_update_panels()
-		elif _robot_timer >= WALK_DT:
+		elif _robot_timer >= _walk_dt:
 			_robot_timer = 0.0
 			board.robot_step += 1
 			sfx.play("robot")
 			if board.robot_step >= robot["path"].size() - 1:
 				robot_done = true
 			_update_panels()
+	if _result_shown:
+		return
 	if mission_started and player_done and robot_done and _finish_timer < 0:
-		_finish_timer = 1.0
+		_finish_timer = 0.8
 	if _finish_timer > 0:
 		_finish_timer -= delta
 		if _finish_timer <= 0:
+			_result_shown = true  # sem isso o contador rearmava e o cartão se repetia
 			_show_result()
 
 

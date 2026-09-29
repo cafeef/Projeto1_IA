@@ -68,7 +68,7 @@ def test_jogo_responde_ao_teclado() -> None:
         capture_output=True, text=True, timeout=120,
     )
     assert "FALHA" not in run.stdout, run.stdout
-    assert run.stdout.count("ok   ") == 9, run.stdout
+    assert run.stdout.count("ok   ") == 10, run.stdout
     assert run.returncode == 0
 
 

@@ -53,6 +53,10 @@ func _run() -> void:
 	_check(game._stars() == 3, "3 estrelas no custo ótimo")
 	_check(not game.robot.is_empty() and game.robot["algorithm"] == "A*", "robô começa depois que a criança chega")
 	_check(Voz.text("resultado_3").begins_with("Perfeito"), "frases carregadas de audio/frases.json")
+	game._on_action()  # botão "Ver resultado" na vez do robô
+	await create_timer(3.0).timeout
+	var cards := game.get_children().filter(func(n): return String(n.name).begins_with("Overlay"))
+	_check(game.robot_done and cards.size() == 1, "pular o robô mostra um único cartão final")
 	quit(1 if failures else 0)
 
 

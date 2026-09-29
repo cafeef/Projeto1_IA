@@ -20,6 +20,7 @@ Pelo terminal: `godot --path bonus_godot`.
 | Andar | setas ou WASD, os botões laranja da tela, ou tocar/clicar na casa ao lado |
 | Ouvir as instruções e a mensagem educativa | botão azul com alto-falante |
 | Desistir (fase sem rota) | botão "Não consigo chegar" |
+| Pular a vez do robô | botão "Ver resultado" (aparece no lugar de "Não consigo chegar") |
 
 ## O que o jogo tem
 
@@ -31,6 +32,7 @@ Pelo terminal: `godot --path bonus_godot`.
 - **Robô Ajudante**: joga depois que a criança chega ao foco (ou desiste). Primeiro "pensa",
   mostrando em azul as casas que a busca expandiu, e depois anda pelo caminho encontrado
   (linha roxa). As pegadas da criança continuam no mapa para comparar os dois caminhos.
+  A vez do robô dura no máximo uns 5 segundos em qualquer mapa.
 - **Cartão educativo** no final, com o desenho do criadouro, a orientação de prevenção,
   a comparação criança × robô e leitura em voz alta.
 - **Fase sem rota**: ensina que, quando não dá para chegar, é preciso pedir ajuda a um adulto.
