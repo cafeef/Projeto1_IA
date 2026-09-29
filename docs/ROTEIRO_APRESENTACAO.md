@@ -9,6 +9,7 @@ heurística e os resultados.
 - [ ] `uv sync` feito na máquina da apresentação; `uv run dengue` abre a janela.
 - [ ] `uv run pytest` passando (mostrar se perguntarem sobre testes).
 - [ ] `results/` com os gráficos da rodada final abertos em outra aba.
+- [ ] Godot 4.5 instalada e `bonus_godot/project.godot` aberto (ou a versão exportada), com o som ligado.
 - [ ] Não jogar os cenários oficiais antes da demonstração, para não gerar partidas extras em
       `results/human_runs.jsonl`. Se precisar, use uma cópia do repositório.
 
@@ -20,6 +21,7 @@ heurística e os resultados.
 | 2 | 2,5 min | Pessoa 1 | Modelagem: grade → grafo implícito; estados, ações, `successors`, teste de objetivo, custos 1/2/4; formato JSON; os 3 cenários oficiais e por que o cenário 3 separa passos de custo. |
 | 3 | 3 min | Pessoa 2 | Algoritmos: estrutura de cada fronteira (fila, pilha, heap), controle de visitados, onde é feito o teste de objetivo e por quê; heurística Manhattan × c_min, admissibilidade e consistência. |
 | 4 | 3 min | Pessoa 3 | **Demonstração ao vivo** no cenário 3 (tecla 5): usuário anda pelo mapa, agente com BFS (custo 65), depois TAB → A\* (custo 21); mostrar explorados, caminho, painel final com a mensagem educativa. Mostrar o cenário sem rota (tecla 6 + X). |
+| 4b | 2 min | Pessoa 4 | **Bônus Godot** (`bonus_godot/`): tela inicial, fase 5 no modo criança (robô "pensando" e cartão educativo com leitura em voz alta), modo professor trocando o algoritmo e o editor gerando uma fase automaticamente. Destacar que as buscas foram reescritas à mão em GDScript e conferidas contra o Python. |
 | 5 | 3 min | Pessoa 4 | Resultados: Tabela 1 e gráficos de custo e de estados expandidos; respostas centrais (passos ≠ custo, a Gulosa enganada, o A\* ótimo, a DFS instável); comparação usuário × agente; conclusão e limitações. |
 
 ## Mensagens-chave

@@ -479,5 +479,5 @@ Prazo sugerido: paralelo, somente depois que o nucleo Python estiver estavel.
 - [x] Analise comparativa responde as perguntas obrigatorias.
 - [x] Codigo organizado.
 - [ ] Todos os membros conseguem explicar sua parte e a visao geral.
-- [ ] Bonus Godot nao compromete a implementacao principal.
+- [x] Bonus Godot nao compromete a implementacao principal. (projeto separado em `bonus_godot/`; buscas em GDScript conferidas contra o Python)
 
