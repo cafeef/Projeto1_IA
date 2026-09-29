@@ -26,3 +26,7 @@ renderer/rendering_method.mobile="gl_compatibility"
 [audio]
 
 general/text_to_speech=true
+
+[autoload]
+
+Voz="*res://scripts/voz.gd"

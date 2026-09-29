@@ -1,14 +1,16 @@
 class_name GameScreen
 extends Control
 ## Uma missão: o jogador e o Robô Ajudante procuram o mesmo foco, no mesmo
-## mapa e saindo da mesma casa. Ao final, cartão educativo e comparação.
+## mapa e saindo da mesma casa. A criança joga primeiro; o robô só começa
+## depois, para que ela não copie o caminho dele. Ao final, cartão educativo
+## e comparação.
 
 signal exit_requested
 signal next_requested
 signal replay_requested
 
-const EXPLORE_DT := 0.07  # tempo para mostrar cada estado que o robô olhou
-const WALK_DT := 0.38  # tempo para o robô andar uma casa
+const EXPLORE_DT := 0.06  # tempo para mostrar cada estado que o robô olhou
+const WALK_DT := 0.3  # tempo para o robô andar uma casa
 const KEYS := {
 	KEY_UP: Vector2i(0, -1), KEY_W: Vector2i(0, -1),
 	KEY_RIGHT: Vector2i(1, 0), KEY_D: Vector2i(1, 0),
@@ -191,9 +193,9 @@ func _show_intro() -> void:
 		Art.draw_focus(ci, s / 2, s.y * 0.9, p.focus)
 		Art.draw_mosquito(ci, s / 2 + Vector2(0, -s.y * 0.2), s.y * 0.9, t)
 	v.add_child(UI.Doodle.new(focus_art, Vector2(0, 150), true))
-	v.add_child(UI.label("Encontre o foco do mosquito:", 30, UI.INK, HORIZONTAL_ALIGNMENT_CENTER))
+	v.add_child(UI.label(Voz.text("encontre"), 30, UI.INK, HORIZONTAL_ALIGNMENT_CENTER))
 	v.add_child(UI.label(problem.focus, 36, UI.RED, HORIZONTAL_ALIGNMENT_CENTER))
-	v.add_child(UI.label(_instructions(), 24, UI.INK, HORIZONTAL_ALIGNMENT_CENTER, true))
+	v.add_child(UI.label(Voz.text("instrucoes"), 24, UI.INK, HORIZONTAL_ALIGNMENT_CENTER, true))
 	var h := UI.hbox(16)
 	h.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.add_child(h)
@@ -203,21 +205,35 @@ func _show_intro() -> void:
 	go.grab_focus.call_deferred()
 
 
-func _instructions() -> String:
-	return "Use as setas para andar até o foco. Grama cansa um pouco e lama cansa muito: " \
-		+ "tente gastar pouca energia! O Robô Ajudante também vai procurar."
+## Ids de frases.json para o foco e a mensagem; fases do editor com texto
+## próprio caem no texto literal (lido pela voz do sistema).
+func _focus_ids() -> Array:
+	var key := Art.focus_key(problem.focus)
+	var name_id := "foco_" + key
+	var msg_id := "msg_" + key
+	return [
+		name_id if Voz.text(name_id) == problem.focus else problem.focus,
+		msg_id if Voz.text(msg_id) == problem.message else problem.message,
+	]
 
 
 func _speak_instructions() -> void:
-	Speech.say("Encontre o foco do mosquito: %s. %s" % [problem.focus, _instructions()])
+	Voz.say(["encontre", _focus_ids()[0], "instrucoes"])
 
 
 func _begin_mission() -> void:
 	sfx.play("click")
+	Voz.stop()
 	_close_overlay()
 	mission_started = true
+	_update_panels()
+
+
+## Vez do robô: só depois que a criança chegou ou desistiu.
+func _start_robot() -> void:
 	robot = Search.run(algorithm, problem)
 	board.robot_result = robot
+	_robot_timer = -0.8  # pequena pausa para a criança ver o robô entrar
 	_update_panels()
 
 
@@ -271,8 +287,8 @@ func _try_move(d: Vector2i) -> void:
 		board.focus_cleared = true
 		board.celebrate()
 		sfx.play("win")
-		if not robot_done:
-			_toast_show("Você achou o foco! Vamos esperar o robô.")
+		_toast_say("vez_do_robo_achou")
+		_start_robot()
 	_update_panels()
 
 
@@ -282,7 +298,8 @@ func _give_up() -> void:
 	player_done = true
 	gave_up = true
 	_clock_end = Time.get_ticks_msec()
-	_toast_show("Tudo bem! Vamos ver o que o robô faz.")
+	_toast_say("vez_do_robo_desistiu")
+	_start_robot()
 	_update_panels()
 
 
@@ -290,7 +307,7 @@ func _process(delta: float) -> void:
 	if _toast_timer > 0:
 		_toast_timer -= delta
 		_toast.visible = _toast_timer > 0
-	if mission_started and not robot_done:
+	if not robot.is_empty() and not robot_done:
 		_robot_timer += delta
 		var explored: Array = robot["explored"]
 		if board.robot_explored < explored.size():
@@ -306,8 +323,6 @@ func _process(delta: float) -> void:
 			sfx.play("robot")
 			if board.robot_step >= robot["path"].size() - 1:
 				robot_done = true
-				if not player_done:
-					_toast_show("O robô chegou! Continue, você consegue!")
 			_update_panels()
 	if mission_started and player_done and robot_done and _finish_timer < 0:
 		_finish_timer = 1.0
@@ -323,6 +338,12 @@ func _toast_show(text: String) -> void:
 	_toast_timer = 3.0
 
 
+## Aviso na tela e, se houver gravação, falado (sem a voz robótica do sistema).
+func _toast_say(id: String) -> void:
+	_toast_show(Voz.text(id))
+	Voz.say([id], false)
+
+
 func _elapsed_s() -> float:
 	if _clock_start < 0:
 		return 0.0
@@ -336,7 +357,7 @@ func _update_panels() -> void:
 		you += "\nTempo: %.1f s" % _elapsed_s()
 	_you_stats.text = you
 	if robot.is_empty():
-		_robot_status.text = "Esperando você começar"
+		_robot_status.text = "Esperando você terminar" if mission_started else "Joga depois de você"
 		_robot_stats.text = ""
 		return
 	if board.robot_explored < robot["explored"].size():
@@ -413,35 +434,29 @@ func _show_result() -> void:
 		for i in 3:
 			UI.draw_star(ci, Vector2(s.x / 2 + (i - 1) * 70, s.y / 2), 30, i < star_count)
 	v.add_child(UI.Doodle.new(star_art, Vector2(0, 70)))
-	v.add_child(UI.label(_feedback(stars, impossible), 26, UI.INK, HORIZONTAL_ALIGNMENT_CENTER, true))
+	var feedback_id := _feedback(stars, impossible)
+	v.add_child(UI.label(Voz.text(feedback_id), 26, UI.INK, HORIZONTAL_ALIGNMENT_CENTER, true))
 	v.add_child(UI.label(_comparison(), 22, UI.INK, HORIZONTAL_ALIGNMENT_CENTER, true))
 
 	var buttons := UI.hbox(14)
 	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.add_child(buttons)
-	var focus_text := "%s. %s" % [problem.focus, problem.message]
-	buttons.add_child(UI.icon_button(func(ci, s, _t): UI.draw_speaker(ci, s), UI.BLUE, func() -> void: Speech.say(focus_text), Vector2(90, 76)))
+	var spoken := [feedback_id] + _focus_ids()
+	buttons.add_child(UI.icon_button(func(ci, s, _t): UI.draw_speaker(ci, s), UI.BLUE, func() -> void: Voz.say(spoken), Vector2(90, 76)))
 	buttons.add_child(UI.button("Jogar de novo", UI.ORANGE, func() -> void: replay_requested.emit(), Vector2(0, 76)))
 	buttons.add_child(UI.button("Fases", UI.GRAY, func() -> void: exit_requested.emit(), Vector2(0, 76)))
 	if has_next:
 		var next := UI.button("Próxima fase", UI.GREEN, func() -> void: next_requested.emit(), Vector2(0, 76))
 		buttons.add_child(next)
 		next.grab_focus.call_deferred()
+	Voz.say(spoken, false)  # com gravações, o cartão já é lido sozinho
 
 
+## Id da frase de resultado (frases.json).
 func _feedback(stars: int, impossible: bool) -> String:
 	if impossible:
-		if gave_up:
-			return "Você percebeu que não dava para chegar. Quando isso acontecer, peça ajuda a um adulto!"
-		return "Ninguém consegue chegar: o foco está cercado por muros."
-	match stars:
-		3:
-			return "Perfeito! Você gastou a menor energia possível."
-		2:
-			return "Muito bem! Dava para gastar um pouco menos de energia."
-		1:
-			return "Você conseguiu! Tente de novo gastando menos energia."
-	return "Tudo bem! Veja o caminho roxo do robô e tente de novo."
+		return "cercado_desistiu" if gave_up else "cercado"
+	return "resultado_%d" % stars
 
 
 func _comparison() -> String:

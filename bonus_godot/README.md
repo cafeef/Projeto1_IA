@@ -2,8 +2,9 @@
 
 Versão jogável do ambiente de simulação, pensada para **crianças do Ensino Fundamental e
 alunos com deficiência intelectual** (item 2.11 do enunciado). A criança e o **Robô Ajudante**
-procuram o mesmo foco de dengue no mesmo mapa. Ao chegar, o jogo mostra o criadouro
-encontrado e uma orientação de prevenção.
+procuram o mesmo foco de dengue no mesmo mapa: primeiro a criança faz o seu caminho e só
+depois o robô procura, para que ela não copie a rota dele. Ao chegar, o jogo mostra o
+criadouro encontrado e uma orientação de prevenção.
 
 ![Tela inicial](capturas/inicio.png)
 
@@ -27,8 +28,9 @@ Pelo terminal: `godot --path bonus_godot`.
 - **Energia em vez de "custo"**: calçada gasta 1, grama 2 e lama 4, com legenda sempre visível.
   As estrelas comparam a energia gasta com a menor possível (calculada pelo A\*):
   3 estrelas no ótimo, 2 até 50% acima, 1 acima disso.
-- **Robô Ajudante**: começa junto com a criança. Primeiro "pensa", mostrando em azul as casas que
-  a busca expandiu, e depois anda pelo caminho encontrado (linha roxa).
+- **Robô Ajudante**: joga depois que a criança chega ao foco (ou desiste). Primeiro "pensa",
+  mostrando em azul as casas que a busca expandiu, e depois anda pelo caminho encontrado
+  (linha roxa). As pegadas da criança continuam no mapa para comparar os dois caminhos.
 - **Cartão educativo** no final, com o desenho do criadouro, a orientação de prevenção,
   a comparação criança × robô e leitura em voz alta.
 - **Fase sem rota**: ensina que, quando não dá para chegar, é preciso pedir ajuda a um adulto.
@@ -47,14 +49,15 @@ Pelo terminal: `godot --path bonus_godot`.
 ### Decisões de acessibilidade
 
 - Letras grandes (19 a 72 px), botões grandes com cantos arredondados e cores fortes com bom contraste.
-- Uma instrução por vez, com frases curtas, e botão para ouvir tudo em voz alta (texto para fala do
-  sistema, em português, quando houver voz instalada).
+- Uma instrução por vez, com frases curtas, e botão para ouvir tudo em voz alta. As falas usam
+  gravações (voz humana ou neural) em `audio/voz/`; sem elas, a voz do sistema. Veja
+  [audio/README.md](audio/README.md) para gravar ou gerar as vozes.
 - Várias formas de jogar: teclado, mouse ou toque, sem depender de destreza.
 - Sem limite de tempo para a criança. O tempo só aparece no modo professor.
 - Retorno imediato: som e tremida ao bater no muro, som a cada passo, confete e som ao eliminar o foco.
 - Linguagem positiva nas mensagens de resultado ("Você conseguiu! Tente de novo gastando menos energia").
-- Nenhum arquivo externo de imagem ou som: tudo é desenhado e sintetizado pelo jogo, o que deixa o
-  projeto leve e fácil de exportar.
+- Nenhum arquivo externo de imagem ou efeito sonoro: tudo é desenhado e sintetizado pelo jogo, o
+  que deixa o projeto leve e fácil de exportar. Só as falas usam arquivos de áudio.
 
 ## Algoritmos autorais
 
@@ -104,6 +107,10 @@ bonus_godot/
     editor_screen.gd        editor e gerador de fases
     board.gd, art.gd        desenho do tabuleiro, personagens e criadouros
     ui.gd, sfx.gd           componentes de interface e sons sintetizados
-    progress.gd, speech.gd  estrelas/fases salvas e leitura em voz alta
+    progress.gd             estrelas e fases salvas
+    voz.gd                  autoload "Voz": toca as gravações ou usa a voz do sistema
+  audio/frases.json         textos falados (e exibidos) no jogo
+  audio/voz/                gravações das falas (ver audio/README.md)
+  audio/gerar_vozes.py      gera as falas com voz neural ou lista o roteiro de gravação
   tests/                    comparação com o Python, teste de fumaça e capturas de tela
 ```

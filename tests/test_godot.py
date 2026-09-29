@@ -68,5 +68,14 @@ def test_jogo_responde_ao_teclado() -> None:
         capture_output=True, text=True, timeout=120,
     )
     assert "FALHA" not in run.stdout, run.stdout
-    assert run.stdout.count("ok   ") == 6, run.stdout
+    assert run.stdout.count("ok   ") == 9, run.stdout
     assert run.returncode == 0
+
+
+def test_frases_dos_focos_iguais_aos_cenarios() -> None:
+    """As falas gravadas dos focos precisam bater com o texto dos cenários."""
+    frases = json.loads((GODOT_DIR / "audio" / "frases.json").read_text("utf-8"))
+    for scenario in SCENARIOS:
+        data = json.loads(scenario.read_text("utf-8"))
+        assert data["focus"] in frases.values(), data["focus"]
+        assert data["message"] in frases.values(), data["message"]
