@@ -8,6 +8,7 @@ Repositório referente ao código desenvolvido para o Projeto 1 da disciplina de
 - [docs/RELATORIO.docx](docs/RELATORIO.docx) — relatório no modelo da UTFPR (prévia em [docs/RELATORIO.pdf](docs/RELATORIO.pdf)).
 - [docs/ROTEIRO_APRESENTACAO.md](docs/ROTEIRO_APRESENTACAO.md) — roteiro e perguntas da defesa.
 - [docs/PROJETO.md](docs/PROJETO.md) — enunciado.
+- [bonus_godot/README.md](bonus_godot/README.md) — jogo educativo bônus em Godot 4.5.
 
 ## Desenvolvimento
 
@@ -70,3 +71,7 @@ python scripts/gerar_relatorio_docx.py
 ```
 
 Edite o texto no `.md` e os elementos pré-textuais (autores, professor, resumo, abstract, siglas e símbolos) em `PRE_TEXTUAL`, no início do script, e gere de novo. Com o LibreOffice instalado, o script calcula as páginas do sumário e das listas e gera a prévia `docs/RELATORIO.pdf`. Ao abrir o `.docx` no Word, aceite atualizar os campos. Para a versão final, exporte o PDF pelo Word.
+
+## Bônus: jogo educativo em Godot
+
+`bonus_godot/` é um projeto Godot 4.5 com o jogo "Missão Dengue", para crianças e alunos com deficiência intelectual. Tem as 6 fases, o Robô Ajudante com BFS, DFS, Gulosa e A\* escritos à mão em GDScript, cartões educativos com leitura em voz alta, modo professor e um editor e gerador de fases. Para jogar, abra `bonus_godot/project.godot` na Godot 4.5. Detalhes em [bonus_godot/README.md](bonus_godot/README.md).

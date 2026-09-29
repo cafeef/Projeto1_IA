@@ -1,0 +1,14 @@
+{
+  "name": "Desafio sem rota",
+  "focus": "Balde com água parada",
+  "message": "Baldes sem uso devem ficar de boca para baixo, cobertos ou ser descartados corretamente.",
+  "grid": [
+    "########",
+    "#S.....#",
+    "#.####.#",
+    "#.#F##.#",
+    "#.####.#",
+    "#......#",
+    "########"
+  ]
+}
