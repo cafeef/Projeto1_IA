@@ -27,7 +27,7 @@ func _shot(name: String) -> void:
 	print("captura: ", name)
 
 
-func _moves(game: GameScreen, moves: Array) -> void:
+func _moves(game, moves: Array) -> void:
 	for m in moves:
 		game._try_move(m)
 		await _wait(0.12)
@@ -49,7 +49,7 @@ func _run() -> void:
 	main.play_level(4)
 	await _wait(0.5)
 	await _shot("04_instrucao")
-	var game: GameScreen = main.current
+	var game = main.current  # sem tipo: no modo --script o autoload Voz ainda não existe ao compilar
 	game._begin_mission()
 	var up := Vector2i(0, -1)
 	var down := Vector2i(0, 1)
@@ -62,7 +62,7 @@ func _run() -> void:
 		rest.append(right)
 	rest.append_array([up, up])
 	await _moves(game, rest)
-	await _wait(10.0)
+	await _wait(12.0)  # o robô joga depois da criança
 	await _shot("06_resultado")
 
 	main.play_level(5)
@@ -73,6 +73,15 @@ func _run() -> void:
 	game._give_up()
 	await _wait(3.5)
 	await _shot("07_sem_rota")
+
+	Progress.teacher_mode = false  # como a criança vê
+	main.play_level(1)
+	await _wait(0.3)
+	game = main.current
+	game._begin_mission()
+	await _moves(game, [right, right, right, down, down, right])
+	await _wait(1.5)
+	await _shot("09_crianca")
 
 	main.show_editor(null)
 	await _wait(0.3)

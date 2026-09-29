@@ -122,13 +122,14 @@ func show_help() -> void:
 		Art.draw_focus(ci, s / 2, s.y, "Vaso")
 		Art.draw_mosquito(ci, s / 2 - Vector2(0, s.y * 0.25), s.y, t)
 	var steps := [
-		[func(ci, s, t): Art.draw_player(ci, s / 2, s.y, t), "1. Você é a criança de camiseta laranja. Ande com as setas do teclado, com os botões laranja ou tocando na casa ao lado."],
-		[terrains, "2. Calçada gasta 1 de energia, grama gasta 2 e lama gasta 4. Muros não deixam passar. Tente gastar pouca energia!"],
-		[func(ci, s, t): Art.draw_robot(ci, s / 2, s.y, t), "3. O Robô Ajudante procura o mesmo foco. As casas azuis são os lugares que ele olhou antes de decidir o caminho."],
-		[focus_art, "4. Chegue no foco para eliminar o criadouro do mosquito e aprender como evitar a dengue."],
+		[func(ci, s, t): Art.draw_player(ci, s / 2, s.y, t), "como_jogar_1"],
+		[terrains, "como_jogar_2"],
+		[func(ci, s, t): Art.draw_robot(ci, s / 2, s.y, t), "como_jogar_3"],
+		[focus_art, "como_jogar_4"],
 	]
-	var all_text := ""
-	for step in steps:
+	var ids := []
+	for n in steps.size():
+		var step: Array = steps[n]
 		var c := UI.card()
 		c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		c.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -136,12 +137,12 @@ func show_help() -> void:
 		var h := UI.hbox(16)
 		c.add_child(h)
 		h.add_child(UI.Doodle.new(step[0], Vector2(150, 110), true))
-		var l := UI.label(step[1], 25, UI.INK, HORIZONTAL_ALIGNMENT_LEFT, true)
+		var l := UI.label("%d. %s" % [n + 1, Voz.text(step[1])], 25, UI.INK, HORIZONTAL_ALIGNMENT_LEFT, true)
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		h.add_child(l)
-		all_text += step[1] + " "
-	var listen := UI.button("Ouvir as instruções", UI.BLUE, func() -> void: Speech.say(all_text), Vector2(0, 72))
+		ids.append(step[1])
+	var listen := UI.button("Ouvir as instruções", UI.BLUE, func() -> void: Voz.say(ids), Vector2(0, 72))
 	v.add_child(listen)
 	listen.grab_focus.call_deferred()
 
