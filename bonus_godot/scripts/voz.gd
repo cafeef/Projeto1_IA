@@ -1,35 +1,44 @@
+class_name Voz
 extends Node
-## Autoload "Voz": lê frases em voz alta.
+## Leitura em voz alta: Voz.say(["instrucoes"]), Voz.text("instrucoes").
 ##
 ## Prioridade: gravações em res://audio/voz/<id>.ogg|.mp3|.wav (voz humana ou
 ## neural, ver audio/README.md). Se faltar alguma gravação da frase pedida,
 ## usa a voz do sistema (texto para fala), que em alguns computadores soa
 ## robótica. Os textos ficam em res://audio/frases.json.
+##
+## É uma classe comum com funções estáticas (não um autoload): funciona sem
+## nenhum registro no project.godot. O nó que toca o áudio é criado na
+## primeira fala e pendurado na raiz da árvore de cenas.
 
 const DIR := "res://audio/voz/"
+const PHRASES := "res://audio/frases.json"
 const EXTENSIONS := ["ogg", "mp3", "wav"]
 ## Vozes de sistema mais naturais, na ordem de preferência.
 const PREFERRED := ["Francisca", "Thalita", "Maria", "Luciana", "Google", "Microsoft", "Daniel"]
 
-var frases := {}
+static var _frases := {}
+static var _instance: Voz
+
 var _player: AudioStreamPlayer
 var _queue: Array = []
 
 
-func _ready() -> void:
-	var data = JSON.parse_string(FileAccess.get_file_as_string("res://audio/frases.json"))
-	if typeof(data) == TYPE_DICTIONARY:
-		frases = data
+func _init() -> void:
 	_player = AudioStreamPlayer.new()
 	add_child(_player)
 	_player.finished.connect(_play_next)
 
 
-func text(id: String) -> String:
-	return frases.get(id, id)
+static func text(id: String) -> String:
+	if _frases.is_empty():
+		var data = JSON.parse_string(FileAccess.get_file_as_string(PHRASES))
+		if typeof(data) == TYPE_DICTIONARY:
+			_frases = data
+	return _frases.get(id, id)
 
 
-func has_clip(id: String) -> bool:
+static func has_clip(id: String) -> bool:
 	return _clip_path(id) != ""
 
 
@@ -37,12 +46,12 @@ func has_clip(id: String) -> bool:
 ## (fases criadas no editor) vão direto para a voz do sistema.
 ## system_fallback=false: sem gravação, fica em silêncio (usado nas falas
 ## automáticas, para não tocar a voz robótica sem a criança pedir).
-func say(ids: Array, system_fallback := true) -> void:
+static func say(ids: Array, system_fallback := true) -> void:
 	stop()
-	var all_recorded := ids.all(func(id): return has_clip(id))
-	if all_recorded:
-		_queue = ids.duplicate()
-		_play_next()
+	if ids.all(func(id): return has_clip(id)):
+		var voz := _node()
+		voz._queue = ids.duplicate()
+		voz._play_next()
 	elif system_fallback:
 		var parts := PackedStringArray()
 		for id in ids:
@@ -50,12 +59,25 @@ func say(ids: Array, system_fallback := true) -> void:
 		_system_say(" ".join(parts))
 
 
-func stop() -> void:
-	_queue.clear()
-	if _player:
-		_player.stop()
+static func stop() -> void:
+	if _instance != null and is_instance_valid(_instance):
+		_instance._queue.clear()
+		_instance._player.stop()
 	if _system_voice() != "":
 		DisplayServer.tts_stop()
+
+
+## True enquanto uma gravação está tocando (usado nos testes).
+static func is_playing() -> bool:
+	return _instance != null and is_instance_valid(_instance) and _instance._player.playing
+
+
+static func _node() -> Voz:
+	if _instance == null or not is_instance_valid(_instance):
+		_instance = Voz.new()
+		_instance.name = "Voz"
+		(Engine.get_main_loop() as SceneTree).root.add_child(_instance)
+	return _instance
 
 
 func _play_next() -> void:
@@ -69,7 +91,7 @@ func _play_next() -> void:
 		_play_next()
 
 
-func _clip_path(id: String) -> String:
+static func _clip_path(id: String) -> String:
 	for ext in EXTENSIONS:
 		var path := "%s%s.%s" % [DIR, id, ext]
 		if ResourceLoader.exists(path):
@@ -77,13 +99,13 @@ func _clip_path(id: String) -> String:
 	return ""
 
 
-func _system_say(message: String) -> void:
+static func _system_say(message: String) -> void:
 	var voice := _system_voice()
 	if voice != "":
 		DisplayServer.tts_speak(message, voice, 80, 1.0, 1.0)
 
 
-func _system_voice() -> String:
+static func _system_voice() -> String:
 	if not ProjectSettings.get_setting("audio/general/text_to_speech", false):
 		return ""
 	var voices := DisplayServer.tts_get_voices()
