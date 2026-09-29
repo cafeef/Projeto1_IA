@@ -158,6 +158,52 @@ concluem: o usuário chega ou desiste, e o agente termina a animação. Nesse mo
 um painel com o foco encontrado, a mensagem educativa e a tabela comparativa
 (passos, custo, tempo, estados expandidos, estados gerados e fronteira máxima).
 
+### 3.6 Jogo educacional (bônus)
+
+Além do ambiente principal, a equipe desenvolveu o jogo "Missão Dengue" na Godot 4.5
+(GODOT ENGINE, 2025), na pasta `bonus_godot/`. O público-alvo são crianças do Ensino
+Fundamental e alunos com deficiência intelectual, conforme o item 2.11 do enunciado. O jogo
+reaproveita os seis cenários (copiados de `scenarios/`) e as mesmas regras de movimento e
+custo. A criança e o Robô Ajudante partem da mesma casa em direção ao mesmo foco, mas em
+turnos: primeiro a criança faz o seu caminho (Figura 2) e só depois o robô procura, para que
+ela não copie a rota dele. Na vez do robô, o jogo mostra em azul as casas que a busca
+expandiu e depois o caminho encontrado, ao lado das pegadas da criança. Ao final, um cartão
+apresenta o criadouro, a orientação de prevenção e a comparação entre os dois (Figura 3).
+
+Para aproximar o conceito de custo desse público, o custo aparece como "energia gasta"
+(calçada 1, grama 2 e lama 4), com legenda sempre visível. A fase termina com uma a três
+estrelas, conforme a energia do jogador se aproxima da menor possível, calculada pelo A\*. As
+decisões de interface seguem o que o enunciado pede sobre clareza das instruções,
+simplicidade e legibilidade:
+
+- letras e botões grandes, cores contrastantes e uma instrução por vez;
+- leitura em voz alta das instruções e das mensagens educativas, com gravações de voz
+  humana ou neural (e a voz do sistema como alternativa);
+- controle por teclado, por botões na tela ou tocando na casa vizinha;
+- nenhum limite de tempo para a criança e mensagens de incentivo;
+- som e animação como retorno de cada ação.
+
+O jogo tem ainda um modo professor, que libera todas as fases, permite escolher o algoritmo
+do robô (BFS, DFS, Gulosa ou A\*) e mostra as métricas de busca. Há também um editor de fases
+com geração automática de mapas, que só aceita mapas em que a busca encontra caminho. As
+quatro buscas foram reescritas manualmente em GDScript, incluindo o heap da fila de
+prioridade, sem os recursos de pathfinding da Godot (`AStarGrid2D` e `NavigationServer`). Um
+teste automatizado (`tests/test_godot.py`) confere que, nos seis cenários e nos quatro
+algoritmos, a versão em GDScript produz exatamente o mesmo caminho, custo, número de estados
+expandidos e gerados e tamanho máximo da fronteira que a versão em Python.
+
+Figura 2 – Jogo Missão Dengue: fase em andamento no modo criança
+
+![Jogo no modo criança](../bonus_godot/capturas/crianca.png)
+
+Fonte: Autoria própria (2026).
+
+Figura 3 – Jogo Missão Dengue: cartão educativo ao final da fase (modo professor)
+
+![Cartão educativo](../bonus_godot/capturas/resultado.png)
+
+Fonte: Autoria própria (2026).
+
 ## 4. Implementação dos Algoritmos
 
 Os quatro algoritmos operam sobre o mesmo `GridProblem` e compartilham três componentes
@@ -412,22 +458,22 @@ Gráfico 6 – Tempo de execução dos algoritmos (mediana de 5 rodadas)
 
 Fonte: Autoria própria (2026).
 
-As Figuras 2 a 4 mostram, sobre o mapa de cada cenário oficial, o caminho de cada método.
+As Figuras 4 a 6 mostram, sobre o mapa de cada cenário oficial, o caminho de cada método.
 O círculo azul marca a origem, e o X vermelho, o foco.
 
-Figura 2 – Caminhos de cada método no cenário 1 (simples)
+Figura 4 – Caminhos de cada método no cenário 1 (simples)
 
 ![Cenário 1](../results/caminhos_cenario1.png)
 
 Fonte: Autoria própria (2026).
 
-Figura 3 – Caminhos de cada método no cenário 2 (intermediário)
+Figura 5 – Caminhos de cada método no cenário 2 (intermediário)
 
 ![Cenário 2](../results/caminhos_cenario2.png)
 
 Fonte: Autoria própria (2026).
 
-Figura 4 – Caminhos de cada método no cenário 3 (complexo)
+Figura 6 – Caminhos de cada método no cenário 3 (complexo)
 
 ![Cenário 3](../results/caminhos_cenario3.png)
 
@@ -542,7 +588,7 @@ Depende do algoritmo. Nos três cenários oficiais, o caminho do usuário foi **
 célula igual ao do A\***. Também coincidiu com o de BFS e Gulosa nos cenários 1 e 2, em que
 o caminho mais curto já é o mais barato. Foi diferente do da DFS em todos os cenários, e
 diferente do de BFS e Gulosa no cenário 3: o usuário desceu para o corredor da linha 3 em
-vez de atravessar a faixa de terreno difícil (Figura 4). No cenário "Avançado", o usuário
+vez de atravessar a faixa de terreno difícil (Figura 6). No cenário "Avançado", o usuário
 fez um caminho próprio, diferente do de todos os algoritmos.
 
 **13. Em quais situações o agente superou claramente o usuário?**
@@ -602,7 +648,9 @@ triplo do caminho ótimo. Na comparação com o usuário, a percepção humana a
 ótima nos três cenários oficiais, com o mesmo caminho do A\*, e superou BFS, DFS e Gulosa
 quando o custo do terreno estava visível. Por outro lado, o usuário errou em um labirinto
 com desvios (cenário "Avançado") e demorou a concluir que o foco isolado era inalcançável.
-Nessas situações, a busca sistemática é mais confiável.
+Nessas situações, a busca sistemática é mais confiável. Por fim, o ambiente foi
+transformado no jogo educativo "Missão Dengue" (Seção 3.6), que leva o mesmo problema a
+crianças e a alunos com deficiência intelectual.
 
 **Limitações.**
 
@@ -622,10 +670,9 @@ Nessas situações, a busca sistemática é mais confiável.
 **Melhorias possíveis.**
 
 - Missões com vários focos (visitar todos os criadouros).
-- Um editor ou gerador de cenários.
 - Custos configuráveis por cenário.
 - Mapas maiores para evidenciar diferenças de tempo.
-- Uma versão educativa simplificada para crianças (bônus em Godot).
+- Publicar a versão Web do jogo educativo e avaliá-la com o público-alvo.
 
 ## 10. Referências
 
@@ -634,6 +681,9 @@ Nessas situações, a busca sistemática é mais confiável.
 BRASIL. Ministério da Saúde. **Dengue**. Brasília, DF: Ministério da Saúde, 2024.
 Disponível em: https://www.gov.br/saude/pt-br/assuntos/saude-de-a-a-z/d/dengue. Acesso
 em: 25 set. 2026.
+
+GODOT ENGINE. **Godot Engine documentation**. [S. l.]: Godot Engine, 2025. Disponível em:
+https://docs.godotengine.org/. Acesso em: 29 set. 2026.
 
 HART, P. E.; NILSSON, N. J.; RAPHAEL, B. A formal basis for the heuristic determination of
 minimum cost paths. **IEEE Transactions on Systems Science and Cybernetics**, [s. l.],
